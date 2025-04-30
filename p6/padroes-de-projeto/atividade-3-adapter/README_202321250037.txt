@@ -1,0 +1,40 @@
+CALCULADORA 
+
+INFORMAÇÕES TÉCNICAS:
+--------------------
+- Linguagem de Programação: Java 23
+- Compilador: javac 23.0.1
+- IDE: Visual Studio Code
+- Sistema Operacional: Windows 11 Pro 22H2
+- Tipo da Biblioteca criada: .jar
+
+DESCRIÇÃO DOS MÉTODOS DA CLASSE CALCULADORA_202321250037:
+-----------------------------------------------------
+1. public double soma(double a, double b)
+   Descrição: Realiza a adição de dois números.
+   Parâmetros: 
+     - a: primeiro número (double)
+     - b: segundo número (double)
+   Retorno: Resultado da soma (double)
+
+2. public double subtracao(double a, double b)
+   Descrição: Realiza uma subtração de b em a.
+   Parâmetros: 
+     - a: primeiro número/minuendo (double)
+     - b: segundo número/subtraendo (double)
+   Retorno: Resultado da subtração (double)
+
+3. public double multiplicacao(double a, double b)
+   Descrição: Realiza a multiplicação de a com b.
+   Parâmetros: 
+     - a: primeiro número/fator (double)
+     - b: segundo número/fator (double)
+   Retorno: Resultado da multiplicação (double)
+
+4. public double divisao(double a, double b)
+   Descrição: Realiza a divisão de a por b.
+   Parâmetros: 
+     - a: numerador (double)
+     - b: denominador (double)
+   Retorno: Resultado da divisão (double)
+   Exceção: ArithmeticException se o denominador (b) for zero
