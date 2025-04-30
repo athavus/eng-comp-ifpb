@@ -39,7 +39,7 @@ public class Calculadora_202321250037 {
      */
     public double divisao(double a, double b) {
         if (b == 0) {
-            throw new ArithmeticException("Divisão por zero não é permitida nessa calculadora.");
+            throw new ArithmeticException("Divisao por zero não é permitida nessa calculadora.");
         }
         return a / b;
     }

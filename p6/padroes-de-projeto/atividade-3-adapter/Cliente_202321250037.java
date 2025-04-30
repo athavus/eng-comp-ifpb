@@ -12,23 +12,23 @@ public class Cliente_202321250037 {
         System.out.println("Soma: " + a + " + " + b + " = " + resultadoSoma);
         
         double resultadoSubtracao = calculadora.subtracao(a, b);
-        System.out.println("Subtração: " + a + " - " + b + " = " + resultadoSubtracao);
+        System.out.println("Subtracao: " + a + " - " + b + " = " + resultadoSubtracao);
         
         double resultadoMultiplicacao = calculadora.multiplicacao(a, b);
-        System.out.println("Multiplicação: " + a + " * " + b + " = " + resultadoMultiplicacao);
+        System.out.println("Multiplicacao: " + a + " * " + b + " = " + resultadoMultiplicacao);
         
         try {
             double resultadoDivisao = calculadora.divisao(a, b);
-            System.out.println("Divisão: " + a + " / " + b + " = " + resultadoDivisao);
+            System.out.println("Divisao: " + a + " / " + b + " = " + resultadoDivisao);
         } catch (ArithmeticException e) {
             System.out.println("Erro: " + e.getMessage());
         }
         
         // Teste de erro - divisão por zero
         try {
-            System.out.println("\nTentando divisão por zero:");
+            System.out.println("\nTentando divisao por zero:");
             double resultadoDivisaoPorZero = calculadora.divisao(a, 0);
-            System.out.println("Divisão: " + a + " / 0 = " + resultadoDivisaoPorZero);
+            System.out.println("Divisao: " + a + " / 0 = " + resultadoDivisaoPorZero);
         } catch (ArithmeticException e) {
             System.out.println("Erro: " + e.getMessage());
         }
