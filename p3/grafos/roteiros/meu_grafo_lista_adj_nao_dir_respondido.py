@@ -95,3 +95,18 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         :return: Um valor booleano que indica se o grafo é completo
         '''
 
+        vertices_completos = []
+
+        if self.ha_laco() or self.ha_paralelas():
+            return False
+
+        for vertice in self.vertices:
+            cont = 0
+            for aresta in self.arestas.values():
+                if aresta.v1.rotulo == vertice.rotulo or aresta.v2.rotulo == vertice.rotulo:
+                    cont += 1
+            if cont == len(self.vertices) - 1:
+                vertices_completos.append(vertice)
+
+        if len(vertices_completos) == len(self.vertices):
+            return True
