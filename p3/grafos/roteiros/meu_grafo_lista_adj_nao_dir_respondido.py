@@ -12,8 +12,27 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         :return: Um objeto do tipo set que contém os pares de vértices não adjacentes
         '''
 
+        nao_adjacentes = set()
+        
+        vertices = self.vertices
 
-        pass # Apague essa instrução e inicie seu código aqui
+        for i in range(len(vertices)):
+            for j in range(i + 1, len(vertices)):
+                v1 = vertices[i].rotulo
+                v2 = vertices[j].rotulo
+
+                adjacente = False
+                for aresta in self.arestas.values():
+                    if (aresta.v1.rotulo == v1 and aresta.v2.rotulo == v2) or (aresta.v1.rotulo == v2 and aresta.v2.rotulo == v1):
+                        adjacente = True
+                        break
+
+                if not adjacente:
+                    nao_adjacentes.add(f"{v1}-{v2}")
+
+        return nao_adjacentes
+
+
 
     def ha_laco(self):
         '''
@@ -95,3 +114,18 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         :return: Um valor booleano que indica se o grafo é completo
         '''
 
+        vertices_completos = []
+
+        if self.ha_laco() or self.ha_paralelas():
+            return False
+
+        for vertice in self.vertices:
+            cont = 0
+            for aresta in self.arestas.values():
+                if aresta.v1.rotulo == vertice.rotulo or aresta.v2.rotulo == vertice.rotulo:
+                    cont += 1
+            if cont == len(self.vertices) - 1:
+                vertices_completos.append(vertice)
+
+        if len(vertices_completos) == len(self.vertices):
+            return True

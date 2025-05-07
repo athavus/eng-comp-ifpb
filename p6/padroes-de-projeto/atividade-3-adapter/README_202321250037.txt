@@ -1,4 +1,4 @@
-CALCULADORA 
+CALCULADORA_202321250037
 
 INFORMAÇÕES TÉCNICAS:
 --------------------
@@ -10,31 +10,43 @@ INFORMAÇÕES TÉCNICAS:
 
 DESCRIÇÃO DOS MÉTODOS DA CLASSE CALCULADORA_202321250037:
 -----------------------------------------------------
-1. public double soma(double a, double b)
-   Descrição: Realiza a adição de dois números.
+1. public Calculadora_202321250037(double a, double b)
+   Descrição: Construtor que inicializa a calculadora com dois valores.
    Parâmetros: 
      - a: primeiro número (double)
      - b: segundo número (double)
+
+2. public double getA()
+   Descrição: Obtém o valor do primeiro operando.
+   Retorno: Valor do atributo a (double)
+
+3. public double getB()
+   Descrição: Obtém o valor do segundo operando.
+   Retorno: Valor do atributo b (double)
+
+4. public void setA(double a)
+   Descrição: Define um novo valor para o primeiro operando.
+   Parâmetros:
+     - a: novo valor para o atributo a (double)
+
+5. public void setB(double b)
+   Descrição: Define um novo valor para o segundo operando.
+   Parâmetros:
+     - b: novo valor para o atributo b (double)
+
+6. public double soma()
+   Descrição: Realiza a adição dos dois operandos armazenados nos atributos.
    Retorno: Resultado da soma (double)
 
-2. public double subtracao(double a, double b)
-   Descrição: Realiza uma subtração de b em a.
-   Parâmetros: 
-     - a: primeiro número/minuendo (double)
-     - b: segundo número/subtraendo (double)
+7. public double subtracao()
+   Descrição: Realiza a subtração do segundo operando do primeiro.
    Retorno: Resultado da subtração (double)
 
-3. public double multiplicacao(double a, double b)
-   Descrição: Realiza a multiplicação de a com b.
-   Parâmetros: 
-     - a: primeiro número/fator (double)
-     - b: segundo número/fator (double)
+8. public double multiplicacao()
+   Descrição: Realiza a multiplicação dos dois operandos.
    Retorno: Resultado da multiplicação (double)
 
-4. public double divisao(double a, double b)
-   Descrição: Realiza a divisão de a por b.
-   Parâmetros: 
-     - a: numerador (double)
-     - b: denominador (double)
+9. public double divisao()
+   Descrição: Realiza a divisão do primeiro operando pelo segundo.
    Retorno: Resultado da divisão (double)
    Exceção: ArithmeticException se o denominador (b) for zero
