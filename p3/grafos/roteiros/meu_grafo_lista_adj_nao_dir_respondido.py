@@ -13,7 +13,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         '''
 
         nao_adjacentes = set()
-        
+
         vertices = self.vertices
 
         for i in range(len(vertices)):
@@ -32,8 +32,6 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
         return nao_adjacentes
 
-
-
     def ha_laco(self):
         '''
         Verifica se existe algum laço no grafo.
@@ -44,7 +42,6 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
             if aresta.v1 == aresta.v2:
                 return True
         return False
-
 
     def grau(self, V=''):
         '''
@@ -67,7 +64,6 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
         return grau
 
-
     def ha_paralelas(self):
         '''
         Verifica se há arestas paralelas no grafo
@@ -87,7 +83,6 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
         return False
 
-
     def arestas_sobre_vertice(self, V):
         '''
         Provê uma lista que contém os rótulos das arestas que incidem sobre o vértice passado como parâmetro
@@ -106,7 +101,6 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                 incidencia_arestas.add(aresta)
 
         return incidencia_arestas
-
 
     def eh_completo(self):
         '''
@@ -129,3 +123,90 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
         if len(vertices_completos) == len(self.vertices):
             return True
+
+    def dfs(self, V=""):
+        '''
+        Provê uma lista com os vértices acessíveis a partir do vértice V em uma busca em profundidade (DFS).
+        A lista contém os vértices visitados na ordem em que foram visitados pela busca.
+        :param V: O vértice inicial
+        :return: Uma lista com os rótulos dos vértices acessíveis a partir de V
+        :raises: VerticeInvalidoError se o vértice não existe no grafo
+        '''
+        if not self.existe_rotulo_vertice(V):
+            raise VerticeInvalidoError("")
+
+        visitados = []
+        arvore_dfs = MeuGrafo()
+
+        arvore_dfs.adiciona_vertice(V)
+
+        def dfs_recursivo(vertice_atual):
+            if vertice_atual not in visitados:
+                visitados.append(vertice_atual)
+
+                arestas_incidentes = sorted(self.arestas_sobre_vertice(vertice_atual))
+
+                for aresta in arestas_incidentes:
+                    v1 = self.arestas[aresta].v1.rotulo
+                    v2 = self.arestas[aresta].v2.rotulo
+
+                    if v1 == vertice_atual:
+                        vertice_adjacente = v2
+                    else:
+                        vertice_adjacente = v1
+
+                    if vertice_adjacente not in visitados:
+                        if not arvore_dfs.existe_rotulo_vertice(vertice_adjacente):
+                            arvore_dfs.adiciona_vertice(vertice_adjacente)
+
+                        arvore_dfs.adiciona_aresta(aresta, vertice_atual, vertice_adjacente)
+
+                        dfs_recursivo(vertice_adjacente)
+
+        dfs_recursivo(V)
+
+        return arvore_dfs
+
+    def bfs(self, V=""):
+        '''
+        Provê uma lista com os vértices acessíveis a partir do vértice V em uma busca em largura (BFS).
+        A lista contém os vértices visitados na ordem em que foram visitados pela busca.
+        :param V: O vértice inicial
+        :return: Uma lista com os rótulos dos vértices acessíveis a partir de V
+        :raises: VerticeInvalidoError se o vértice não existe no grafo
+        '''
+        if not self.existe_rotulo_vertice(V):
+            raise VerticeInvalidoError("")
+
+        visitados = []
+        fila = [V]
+        arvore_bfs = MeuGrafo()
+
+        arvore_bfs.adiciona_vertice(V)
+
+        while fila:
+            vertice_atual = fila.pop(0)
+
+            if vertice_atual not in visitados:
+                visitados.append(vertice_atual)
+
+                arestas_incidentes = sorted(self.arestas_sobre_vertice(vertice_atual))
+
+                for aresta in arestas_incidentes:
+                    v1 = self.arestas[aresta].v1.rotulo
+                    v2 = self.arestas[aresta].v2.rotulo
+
+                    if v1 == vertice_atual:
+                        vertice_adjacente = v2
+                    else:
+                        vertice_adjacente = v1
+
+                    if vertice_adjacente not in visitados and vertice_adjacente not in fila:
+                        fila.append(vertice_adjacente)
+
+                        if not arvore_bfs.existe_rotulo_vertice(vertice_adjacente):
+                            arvore_bfs.adiciona_vertice(vertice_adjacente)
+
+                        arvore_bfs.adiciona_aresta(aresta, vertice_atual, vertice_adjacente)
+
+        return arvore_bfs
