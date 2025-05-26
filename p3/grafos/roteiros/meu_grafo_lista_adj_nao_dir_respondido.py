@@ -190,9 +190,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
             if vertice_atual not in visitados:
                 visitados.append(vertice_atual)
 
-                arestas_incidentes = sorted(self.arestas_sobre_vertice(vertice_atual))
-
-                for aresta in arestas_incidentes:
+                for aresta in sorted(self.arestas_sobre_vertice(vertice_atual)):
                     v1 = self.arestas[aresta].v1.rotulo
                     v2 = self.arestas[aresta].v2.rotulo
 
@@ -210,3 +208,54 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                         arvore_bfs.adiciona_aresta(aresta, vertice_atual, vertice_adjacente)
 
         return arvore_bfs
+
+    def eh_conexo(self):
+        if len(self.vertices) == 0:
+            return True
+    
+        vertice_inicial = self.vertices[0]
+    
+        arvore_dfs = self.dfs(vertice_inicial)
+    
+        return len(arvore_dfs.vertices) == len(self.vertices)
+
+
+    def ha_ciclo(self):
+        visitados = set()
+
+        def dfs_para_ciclo(vertice_atual, pai):
+            visitados.add(vertice_atual)
+
+            for aresta in sorted(self.arestas_sobre_vertice(vertice_atual)):
+                v1 = self.arestas[aresta].v1.rotulo
+                v2 = self.arestas[aresta].v2.rotulo
+
+                if v1 == vertice_atual:
+                    vertice_adjacente = v2
+                else:
+                    vertice_adjacente = v1
+
+                if vertice_adjacente not in visitados:
+                    if dfs_para_ciclo(vertice_adjacente, vertice_atual):
+                        return True
+                    elif vertice_adjacente != pai:
+                        return True
+
+            return False
+
+        for v in self.vertices:
+            if v not in visitados:
+                if dfs_para_ciclo(v, None):
+                    return True
+
+    def eh_arvore(self):
+
+        if self.eh_conexo() and not self.ha_ciclo():
+            return True
+
+        return False
+
+        pass
+
+    def eh_bipartido(self):
+        pass
