@@ -212,41 +212,20 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
     def eh_conexo(self):
         if len(self.vertices) == 0:
             return True
-    
+
         vertice_inicial = self.vertices[0]
-    
+
         arvore_dfs = self.dfs(vertice_inicial)
-    
+
         return len(arvore_dfs.vertices) == len(self.vertices)
 
-
     def ha_ciclo(self):
-        visitados = set()
+        grafo_bfs = self.bfs(self.vertices[0].rotulo)
 
-        def dfs_para_ciclo(vertice_atual, pai):
-            visitados.add(vertice_atual)
-
-            for aresta in sorted(self.arestas_sobre_vertice(vertice_atual)):
-                v1 = self.arestas[aresta].v1.rotulo
-                v2 = self.arestas[aresta].v2.rotulo
-
-                if v1 == vertice_atual:
-                    vertice_adjacente = v2
-                else:
-                    vertice_adjacente = v1
-
-                if vertice_adjacente not in visitados:
-                    if dfs_para_ciclo(vertice_adjacente, vertice_atual):
-                        return True
-                    elif vertice_adjacente != pai:
-                        return True
-
+        if self == grafo_bfs:
             return False
 
-        for v in self.vertices:
-            if v not in visitados:
-                if dfs_para_ciclo(v, None):
-                    return True
+        return True
 
     def eh_arvore(self):
 
@@ -255,7 +234,31 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
         return False
 
-        pass
-
     def eh_bipartido(self):
-        pass
+        if len(self.vertices) == 0:
+            return True
+
+        cor = {}
+
+        for vertice in self.vertices:
+            v_rotulo = vertice.rotulo
+            if v_rotulo not in cor:
+                fila = [v_rotulo]
+                cor[v_rotulo] = 0
+
+                while fila:
+                    atual = fila.pop(0)
+
+                    for aresta in self.arestas_sobre_vertice(atual):
+                        v1 = self.arestas[aresta].v1.rotulo
+                        v2 = self.arestas[aresta].v2.rotulo
+
+                        vizinho = v2 if atual == v1 else v1
+
+                        if vizinho not in cor:
+                            cor[vizinho] = 1 - cor[atual]
+                            fila.append(vizinho)
+                        elif cor[vizinho] == cor[atual]:
+                            return False
+
+        return True
