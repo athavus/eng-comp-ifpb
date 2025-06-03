@@ -168,7 +168,13 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         return arvore_dfs
 
     def bfs(self, V=""):
-
+        '''
+        Provê uma lista com os vértices acessíveis a partir do vértice V em uma busca em largura (BFS).
+        A lista contém os vértices visitados na ordem em que foram visitados pela busca.
+        :param V: O vértice inicial
+        :return: Uma lista com os rótulos dos vértices acessíveis a partir de V
+        :raises: VerticeInvalidoError se o vértice não existe no grafo
+        '''
         if not self.existe_rotulo_vertice(V):
             raise VerticeInvalidoError("")
 
@@ -207,34 +213,26 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         if len(self.vertices) == 0:
             return True
 
-        vertice_inicial = self.vertices[0].rotulo
+        vertice_inicial = self.vertices[0]
 
         arvore_dfs = self.dfs(vertice_inicial)
 
         return len(arvore_dfs.vertices) == len(self.vertices)
 
     def ha_ciclo(self):
-        if len(self.vertices) == 0:
-            return False
-
         grafo_bfs = self.bfs(self.vertices[0].rotulo)
 
-        return len(self.arestas) > len(grafo_bfs.arestas)
-
-    def eh_arvore(self):
-        if not self.eh_conexo() or self.ha_ciclo():
+        if self == grafo_bfs:
             return False
 
-        folhas = []
+        return True
 
-        for vertice in self.vertices:
-            grau_vertice = self.grau(vertice.rotulo)
+    def eh_arvore(self):
 
-            if grau_vertice == 1 or (len(self.vertices) == 1 and grau_vertice == 0):
-                folhas.append(vertice.rotulo)
+        if self.eh_conexo() and not self.ha_ciclo():
+            return True
 
-        return folhas
-
+        return False
 
     def eh_bipartido(self):
         if len(self.vertices) == 0:
