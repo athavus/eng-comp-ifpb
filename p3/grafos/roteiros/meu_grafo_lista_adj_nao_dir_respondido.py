@@ -168,13 +168,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         return arvore_dfs
 
     def bfs(self, V=""):
-        '''
-        Provê uma lista com os vértices acessíveis a partir do vértice V em uma busca em largura (BFS).
-        A lista contém os vértices visitados na ordem em que foram visitados pela busca.
-        :param V: O vértice inicial
-        :return: Uma lista com os rótulos dos vértices acessíveis a partir de V
-        :raises: VerticeInvalidoError se o vértice não existe no grafo
-        '''
+
         if not self.existe_rotulo_vertice(V):
             raise VerticeInvalidoError("")
 
@@ -190,9 +184,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
             if vertice_atual not in visitados:
                 visitados.append(vertice_atual)
 
-                arestas_incidentes = sorted(self.arestas_sobre_vertice(vertice_atual))
-
-                for aresta in arestas_incidentes:
+                for aresta in sorted(self.arestas_sobre_vertice(vertice_atual)):
                     v1 = self.arestas[aresta].v1.rotulo
                     v2 = self.arestas[aresta].v2.rotulo
 
@@ -210,3 +202,65 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                         arvore_bfs.adiciona_aresta(aresta, vertice_atual, vertice_adjacente)
 
         return arvore_bfs
+
+    def eh_conexo(self):
+        if len(self.vertices) == 0:
+            return True
+
+        vertice_inicial = self.vertices[0].rotulo
+
+        arvore_dfs = self.dfs(vertice_inicial)
+
+        return len(arvore_dfs.vertices) == len(self.vertices)
+
+    def ha_ciclo(self):
+        if len(self.vertices) == 0:
+            return False
+
+        grafo_bfs = self.bfs(self.vertices[0].rotulo)
+
+        return len(self.arestas) > len(grafo_bfs.arestas)
+
+    def eh_arvore(self):
+        if not self.eh_conexo() or self.ha_ciclo():
+            return False
+
+        folhas = []
+
+        for vertice in self.vertices:
+            grau_vertice = self.grau(vertice.rotulo)
+
+            if grau_vertice == 1 or (len(self.vertices) == 1 and grau_vertice == 0):
+                folhas.append(vertice.rotulo)
+
+        return folhas
+
+
+    def eh_bipartido(self):
+        if len(self.vertices) == 0:
+            return True
+
+        cor = {}
+
+        for vertice in self.vertices:
+            v_rotulo = vertice.rotulo
+            if v_rotulo not in cor:
+                fila = [v_rotulo]
+                cor[v_rotulo] = 0
+
+                while fila:
+                    atual = fila.pop(0)
+
+                    for aresta in self.arestas_sobre_vertice(atual):
+                        v1 = self.arestas[aresta].v1.rotulo
+                        v2 = self.arestas[aresta].v2.rotulo
+
+                        vizinho = v2 if atual == v1 else v1
+
+                        if vizinho not in cor:
+                            cor[vizinho] = 1 - cor[atual]
+                            fila.append(vizinho)
+                        elif cor[vizinho] == cor[atual]:
+                            return False
+
+        return True

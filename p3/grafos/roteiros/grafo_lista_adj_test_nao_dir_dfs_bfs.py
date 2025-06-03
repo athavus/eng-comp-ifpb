@@ -256,3 +256,189 @@ class TestGrafo(unittest.TestCase):
         # Teste com vértice inválido
         with self.assertRaises(VerticeInvalidoError):
             self.g_p.bfs('X')
+
+    def test_ha_ciclo(self):
+        # Teste com grafo da Paraíba (tem ciclos)
+        self.assertTrue(self.g_p.ha_ciclo())
+
+        # Teste com grafo sem paralelas (tem ciclos)
+        self.assertTrue(self.g_p_sem_paralelas.ha_ciclo())
+
+        # Teste com grafos completos (têm ciclos)
+        self.assertTrue(self.g_c.ha_ciclo())
+        self.assertTrue(self.g_c2.ha_ciclo())
+
+        # Teste com grafo completo de 1 vértice (não tem ciclo)
+        self.assertFalse(self.g_c3.ha_ciclo())
+
+        # Teste com grafos desconexos
+        self.assertFalse(self.g_d.ha_ciclo())  # Só tem uma aresta, não forma ciclo
+        self.assertFalse(self.g_d2.ha_ciclo())  # Sem arestas, não tem ciclo
+
+        # Teste com grafos com laço (laços são ciclos)
+        self.assertTrue(self.g_l1.ha_ciclo())
+        self.assertTrue(self.g_l2.ha_ciclo())
+        self.assertTrue(self.g_l3.ha_ciclo())
+        self.assertTrue(self.g_l4.ha_ciclo())
+        self.assertTrue(self.g_l5.ha_ciclo())
+
+        # Criando uma árvore simples para teste (sem ciclo)
+        arvore_simples = MeuGrafo()
+        arvore_simples.adiciona_vertice("A")
+        arvore_simples.adiciona_vertice("B")
+        arvore_simples.adiciona_vertice("C")
+        arvore_simples.adiciona_aresta('ab', 'A', 'B')
+        arvore_simples.adiciona_aresta('bc', 'B', 'C')
+        self.assertFalse(arvore_simples.ha_ciclo())
+
+    def test_eh_arvore(self):
+        # Teste com grafo da Paraíba (não é árvore - tem ciclos)
+        self.assertFalse(self.g_p.eh_arvore())
+
+        # Teste com grafo sem paralelas (não é árvore - tem ciclos)
+        self.assertFalse(self.g_p_sem_paralelas.eh_arvore())
+
+        # Teste com grafos completos (não são árvores - têm ciclos)
+        self.assertFalse(self.g_c.eh_arvore())
+        self.assertFalse(self.g_c2.eh_arvore())
+
+        # Teste com grafo completo de 1 vértice (é árvore)
+        resultado_c3 = self.g_c3.eh_arvore()
+        self.assertTrue(isinstance(resultado_c3, list))  # Retorna lista de folhas
+        self.assertEqual(len(resultado_c3), 1)  # Uma folha (o próprio vértice)
+
+        # Teste com grafos desconexos (não são árvores)
+        self.assertFalse(self.g_d.eh_arvore())  # Desconexo
+        self.assertFalse(self.g_d2.eh_arvore())  # Desconexo (sem arestas)
+
+        # Teste com grafos com laço (não são árvores)
+        self.assertFalse(self.g_l1.eh_arvore())
+        self.assertFalse(self.g_l2.eh_arvore())
+        self.assertFalse(self.g_l3.eh_arvore())
+        self.assertFalse(self.g_l4.eh_arvore())
+        self.assertFalse(self.g_l5.eh_arvore())
+
+        # Criando uma árvore simples
+        arvore_simples = MeuGrafo()
+        arvore_simples.adiciona_vertice("A")
+        arvore_simples.adiciona_vertice("B")
+        arvore_simples.adiciona_vertice("C")
+        arvore_simples.adiciona_aresta('ab', 'A', 'B')
+        arvore_simples.adiciona_aresta('bc', 'B', 'C')
+        resultado_arvore = arvore_simples.eh_arvore()
+        self.assertTrue(isinstance(resultado_arvore, list))
+        self.assertEqual(set(resultado_arvore), {'A', 'C'})  # A e C são folhas
+
+        # Criando uma árvore estrela (vértice central conectado a vários)
+        arvore_estrela = MeuGrafo()
+        arvore_estrela.adiciona_vertice("CENTRO")
+        arvore_estrela.adiciona_vertice("F1")
+        arvore_estrela.adiciona_vertice("F2")
+        arvore_estrela.adiciona_vertice("F3")
+        arvore_estrela.adiciona_aresta('e1', 'CENTRO', 'F1')
+        arvore_estrela.adiciona_aresta('e2', 'CENTRO', 'F2')
+        arvore_estrela.adiciona_aresta('e3', 'CENTRO', 'F3')
+        resultado_estrela = arvore_estrela.eh_arvore()
+        self.assertTrue(isinstance(resultado_estrela, list))
+        self.assertEqual(set(resultado_estrela), {'F1', 'F2', 'F3'})  # As folhas
+
+    def test_eh_bipartido(self):
+        # Teste com grafo vazio
+        grafo_vazio = MeuGrafo()
+        self.assertTrue(grafo_vazio.eh_bipartido())
+
+        # Teste com grafo de um vértice
+        self.assertTrue(self.g_c3.eh_bipartido())
+
+        # Teste com grafo desconexo sem arestas
+        self.assertTrue(self.g_d2.eh_bipartido())
+
+        # Teste com grafo desconexo com uma aresta
+        self.assertTrue(self.g_d.eh_bipartido())  # Uma aresta é sempre bipartida
+
+        # Criando um grafo bipartido simples (grafo estrela)
+        grafo_estrela = MeuGrafo()
+        grafo_estrela.adiciona_vertice("CENTRO")
+        grafo_estrela.adiciona_vertice("A")
+        grafo_estrela.adiciona_vertice("B")
+        grafo_estrela.adiciona_vertice("C")
+        grafo_estrela.adiciona_aresta('ca', 'CENTRO', 'A')
+        grafo_estrela.adiciona_aresta('cb', 'CENTRO', 'B')
+        grafo_estrela.adiciona_aresta('cc', 'CENTRO', 'C')
+        self.assertTrue(grafo_estrela.eh_bipartido())
+
+        # Criando um grafo bipartido completo K2,2
+        grafo_k22 = MeuGrafo()
+        grafo_k22.adiciona_vertice("A1")
+        grafo_k22.adiciona_vertice("A2")
+        grafo_k22.adiciona_vertice("B1")
+        grafo_k22.adiciona_vertice("B2")
+        grafo_k22.adiciona_aresta('a1b1', 'A1', 'B1')
+        grafo_k22.adiciona_aresta('a1b2', 'A1', 'B2')
+        grafo_k22.adiciona_aresta('a2b1', 'A2', 'B1')
+        grafo_k22.adiciona_aresta('a2b2', 'A2', 'B2')
+        self.assertTrue(grafo_k22.eh_bipartido())
+
+        # Criando um grafo não bipartido (triângulo)
+        triangulo = MeuGrafo()
+        triangulo.adiciona_vertice("X")
+        triangulo.adiciona_vertice("Y")
+        triangulo.adiciona_vertice("Z")
+        triangulo.adiciona_aresta('xy', 'X', 'Y')
+        triangulo.adiciona_aresta('yz', 'Y', 'Z')
+        triangulo.adiciona_aresta('zx', 'Z', 'X')
+        self.assertFalse(triangulo.eh_bipartido())
+
+        # Teste com grafos completos
+        self.assertFalse(self.g_c.eh_bipartido())  # K4 não é bipartido
+        self.assertFalse(self.g_c2.eh_bipartido())  # K3 não é bipartido
+
+        # Teste com grafo da Paraíba (precisa verificar se é bipartido)
+        # O grafo da Paraíba tem a estrutura de uma estrela com algumas conexões extras
+        # Como tem ciclos ímpares, provavelmente não é bipartido
+        self.assertFalse(self.g_p.eh_bipartido())
+        self.assertFalse(self.g_p_sem_paralelas.eh_bipartido())
+
+        # Teste com grafos com laço (não são bipartidos)
+        self.assertFalse(self.g_l1.eh_bipartido())
+        self.assertFalse(self.g_l2.eh_bipartido())
+        self.assertFalse(self.g_l3.eh_bipartido())
+        self.assertFalse(self.g_l4.eh_bipartido())
+        self.assertFalse(self.g_l5.eh_bipartido())
+
+        # Criando um caminho (sempre bipartido)
+        caminho = MeuGrafo()
+        caminho.adiciona_vertice("P1")
+        caminho.adiciona_vertice("P2")
+        caminho.adiciona_vertice("P3")
+        caminho.adiciona_vertice("P4")
+        caminho.adiciona_aresta('p12', 'P1', 'P2')
+        caminho.adiciona_aresta('p23', 'P2', 'P3')
+        caminho.adiciona_aresta('p34', 'P3', 'P4')
+        self.assertTrue(caminho.eh_bipartido())
+
+        # Criando um ciclo par (bipartido)
+        ciclo_par = MeuGrafo()
+        ciclo_par.adiciona_vertice("C1")
+        ciclo_par.adiciona_vertice("C2")
+        ciclo_par.adiciona_vertice("C3")
+        ciclo_par.adiciona_vertice("C4")
+        ciclo_par.adiciona_aresta('c12', 'C1', 'C2')
+        ciclo_par.adiciona_aresta('c23', 'C2', 'C3')
+        ciclo_par.adiciona_aresta('c34', 'C3', 'C4')
+        ciclo_par.adiciona_aresta('c41', 'C4', 'C1')
+        self.assertTrue(ciclo_par.eh_bipartido())
+
+        # Criando um ciclo ímpar (não bipartido)
+        ciclo_impar = MeuGrafo()
+        ciclo_impar.adiciona_vertice("I1")
+        ciclo_impar.adiciona_vertice("I2")
+        ciclo_impar.adiciona_vertice("I3")
+        ciclo_impar.adiciona_vertice("I4")
+        ciclo_impar.adiciona_vertice("I5")
+        ciclo_impar.adiciona_aresta('i12', 'I1', 'I2')
+        ciclo_impar.adiciona_aresta('i23', 'I2', 'I3')
+        ciclo_impar.adiciona_aresta('i34', 'I3', 'I4')
+        ciclo_impar.adiciona_aresta('i45', 'I4', 'I5')
+        ciclo_impar.adiciona_aresta('i51', 'I5', 'I1')
+        self.assertFalse(ciclo_impar.eh_bipartido())
