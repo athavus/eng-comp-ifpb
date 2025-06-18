@@ -69,7 +69,10 @@ class MeuGrafo(GrafoMatrizAdjacenciaDirecionado):
         e = self.matriz
         for linha in range(len(self.matriz)):
             for coluna in range(len(self.matriz)):
-                e[coluna][linha] = len(e[coluna][linha])
+                if len(e[coluna][linha]) > 0:
+                    e[coluna][linha] = 1
+                else:
+                    e[coluna][linha] = 0
 
         for linha in range(len(self.matriz)):
             for coluna in range(len(self.matriz)):
