@@ -1,0 +1,20 @@
+
+## O que São Algoritmos?
+
+Tal qual uma receita de bolo, algoritmos são uma sequência de passos estruturada que tem como intuito realizar alguma ação.
+
+## Por Que Eles São Necessários?
+
+Naturalmente não conversamos em linguagem de máquina (0s e 1s), então é necessário termos conhecimento de como podemos nos comunicar com os computadores para fazer a realização de tarefas.
+
+## Como Fazer e Estudar?
+
+A partir daqui começa uma infinidade de oportunidades e caminhos, no geral, todo software ou firmware é construído a partir de um editor de código que se utiliza de alguma linguagem de programação adequada e seu compilador ou interpretador.
+
+## Exemplos de Linguagem de Programação
+
+- **Python:** Sintaxe super simples e abstrata, distancia o usuário de algumas camadas da estrutura do código para manter o mesmo simples. Mais usada para automação, inteligência artificial e aprendizagem de máquina, análise de dados e estatística.
+
+- **Java:** Clássica linguagem, conhecida por ser extremamente verbosa (muitas palavras para realizar uma declaração), java é pai de diversos conceitos estruturais, como orientação a objetos e design patterns, conceitos que serão muito importantes em frente. Possui multicompatibilidade entre sistemas e é extremamente usado em aplicações mobile, aplicações desktop, sistemas de informação, e tudo aquilo que for orientado a objetos.
+
+- **Javascript (ou Node):** A base da web, é uma das linguagens mais populares do mundo, por ter uma sintaxce simples como python, mas ter conceitos avançados e possibilidades únicas através da orientação a eventos presente na linguagem, comunidade extremamente conectada com frameworks (ferramentas que ajudam na formação de projetos na linguagem), é usada para websites e aplicaões web.
