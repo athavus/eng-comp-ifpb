@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "fafb8e60cf2fba80",
+        "id": "0f3a17bcabf1e8da",
         "type": "tabs",
         "children": [
           {
-            "id": "329165a645e3131a",
+            "id": "291edce442949222",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "README"
+              "title": "Nova aba"
             }
           }
         ]
@@ -165,19 +161,20 @@
       "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "35d9fb32b9bc926f",
+  "active": "291edce442949222",
   "lastOpenFiles": [
-    "p6/padroes-de-projeto/atividade-10-criticas-aos-projetos/Melhorias paras Projetos de 23.1.pdf",
-    "p6/padroes-de-projeto/atividade-10-criticas-aos-projetos",
-    "p6/padroes-de-projeto/Nova pasta",
-    "p6/padroes-de-projeto/atividade-9-builder-factorymethod-e-abstractfactory/ATIVIDADE PADRÕES - BUILDER E FACTORYs.pdf",
-    "p6/padroes-de-projeto/atividade-9-builder-factorymethod-e-abstractfactory",
-    "p6/padroes-de-projeto/avaliacao-presencial/diagrama uml do sistema de chaves.pdf",
-    "p6/padroes-de-projeto/avaliacao-presencial",
-    "p6/padroes-de-projeto/atividade-8-observer/diagrama de classe uml.pdf",
-    "p6/padroes-de-projeto/atividade-8-observer",
-    "p6/padroes-de-projeto/projeto-final/panic-assistance-button-main.zip",
-    "p6/padroes-de-projeto/projeto-final",
+    "p6/padroes-de-projeto/atividade-09-builder-factorymethod-e-abstractfactory/ATIVIDADE PADRÕES - BUILDER E FACTORYs.pdf",
+    "p6/padroes-de-projeto/atividade-09-builder-factorymethod-e-abstractfactory",
+    "p6/padroes-de-projeto/atividade-08-observer/diagrama de classe uml.pdf",
+    "p6/padroes-de-projeto/atividade-08-observer",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaWindows.java",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaWindows.class",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaMac.java",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaMac.class",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaLinux.java",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaLinux.class",
+    "p6/padroes-de-projeto/atividade-07-bridge/bridge/JanelaImplementada.java",
+    "README.md",
     "p6/padroes-de-projeto/atividade-sistema/diagrama.svg",
     "p5/banco-de-dados/modelo-entidade-relacionamento/Cardinalidades.md",
     "p5/banco-de-dados/sgbd/SGBD.md",
