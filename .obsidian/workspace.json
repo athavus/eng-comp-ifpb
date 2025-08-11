@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "63353d81d0aada79",
+        "id": "fafb8e60cf2fba80",
         "type": "tabs",
         "children": [
           {
-            "id": "315d50bcb09ca504",
+            "id": "329165a645e3131a",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "README"
             }
           }
         ]
@@ -40,7 +44,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "Explorador de arquivos"
             }
           },
           {
@@ -74,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 542.5
+    "width": 465.5
   },
   "right": {
     "id": "e80151e76a3b3106",
@@ -153,28 +157,36 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "315d50bcb09ca504",
+  "active": "35d9fb32b9bc926f",
   "lastOpenFiles": [
-    "p2/estatistica/TESTE DE HIPÓTESE.pdf",
+    "p6/padroes-de-projeto/atividade-10-criticas-aos-projetos/Melhorias paras Projetos de 23.1.pdf",
+    "p6/padroes-de-projeto/atividade-10-criticas-aos-projetos",
+    "p6/padroes-de-projeto/Nova pasta",
+    "p6/padroes-de-projeto/atividade-9-builder-factorymethod-e-abstractfactory/ATIVIDADE PADRÕES - BUILDER E FACTORYs.pdf",
+    "p6/padroes-de-projeto/atividade-9-builder-factorymethod-e-abstractfactory",
+    "p6/padroes-de-projeto/avaliacao-presencial/diagrama uml do sistema de chaves.pdf",
+    "p6/padroes-de-projeto/avaliacao-presencial",
+    "p6/padroes-de-projeto/atividade-8-observer/diagrama de classe uml.pdf",
+    "p6/padroes-de-projeto/atividade-8-observer",
+    "p6/padroes-de-projeto/projeto-final/panic-assistance-button-main.zip",
+    "p6/padroes-de-projeto/projeto-final",
+    "p6/padroes-de-projeto/atividade-sistema/diagrama.svg",
+    "p5/banco-de-dados/modelo-entidade-relacionamento/Cardinalidades.md",
+    "p5/banco-de-dados/sgbd/SGBD.md",
+    "p5/banco-de-dados/Conceitos Básicos e História.md",
+    "p5/banco-de-dados/Introdução.md",
+    "p5/banco-de-dados/Representação de Dados.md",
+    "Trilhas do Curso.canvas",
     "p2/estatistica/Teste de Hipótese.md",
-    "p2/educacao-ambiental/AVALIAÇÃO 02 - Resenha científica.pdf",
-    "media/img",
-    "media",
     "media/img/Pasted image 20250807120003.png",
-    "p2/educacao-ambiental/Atividade 1 - Educação Ambiental - Miguel Ryan.pdf",
-    "p2/calc-1/Prova de Limites_250317_075340.pdf",
-    "p2/calc-1/Prova de Derivadas_250316_222020.pdf",
-    "p2/calc-1/Lista - Taxas Relacionadas_250304_111402.pdf",
-    "p2/calc-1/Lista - Aplicações das Derivadas_250309_224220.pdf",
-    "p2/calc-1/Limites_250316_110502.pdf",
     "p1/algoritmos/Introdução a Algoritmos e Lógica de Programação.md"
   ]
 }

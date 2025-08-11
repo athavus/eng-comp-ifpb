@@ -1,0 +1,52 @@
+CALCULADORA_202321250037
+
+INFORMAÇÕES TÉCNICAS:
+--------------------
+- Linguagem de Programação: Java 23
+- Compilador: javac 23.0.1
+- IDE: Visual Studio Code
+- Sistema Operacional: Windows 11 Pro 22H2
+- Tipo da Biblioteca criada: .jar
+
+DESCRIÇÃO DOS MÉTODOS DA CLASSE CALCULADORA_202321250037:
+-----------------------------------------------------
+1. public Calculadora_202321250037(double a, double b)
+   Descrição: Construtor que inicializa a calculadora com dois valores.
+   Parâmetros: 
+     - a: primeiro número (double)
+     - b: segundo número (double)
+
+2. public double getA()
+   Descrição: Obtém o valor do primeiro operando.
+   Retorno: Valor do atributo a (double)
+
+3. public double getB()
+   Descrição: Obtém o valor do segundo operando.
+   Retorno: Valor do atributo b (double)
+
+4. public void setA(double a)
+   Descrição: Define um novo valor para o primeiro operando.
+   Parâmetros:
+     - a: novo valor para o atributo a (double)
+
+5. public void setB(double b)
+   Descrição: Define um novo valor para o segundo operando.
+   Parâmetros:
+     - b: novo valor para o atributo b (double)
+
+6. public double soma()
+   Descrição: Realiza a adição dos dois operandos armazenados nos atributos.
+   Retorno: Resultado da soma (double)
+
+7. public double subtracao()
+   Descrição: Realiza a subtração do segundo operando do primeiro.
+   Retorno: Resultado da subtração (double)
+
+8. public double multiplicacao()
+   Descrição: Realiza a multiplicação dos dois operandos.
+   Retorno: Resultado da multiplicação (double)
+
+9. public double divisao()
+   Descrição: Realiza a divisão do primeiro operando pelo segundo.
+   Retorno: Resultado da divisão (double)
+   Exceção: ArithmeticException se o denominador (b) for zero
