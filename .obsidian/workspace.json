@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "0f3a17bcabf1e8da",
+        "id": "246222b4ea9b7dbf",
         "type": "tabs",
         "children": [
           {
-            "id": "291edce442949222",
+            "id": "3ce264341fd194e3",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -161,19 +161,19 @@
       "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "291edce442949222",
+  "active": "35d9fb32b9bc926f",
   "lastOpenFiles": [
-    "p4/micro-1/questoes-prova-pratica-2/questao-10.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-09.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-08.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-07.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-06.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-05.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-04.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-03.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-02.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao-01.c",
-    "p4/micro-1/questoes-prova-pratica-2/questao2.c",
+    "p3/grafos/roteiros/roteiro-07-bellmann-ford/meu_grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/roteiro-07-bellmann-ford/grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/meu_grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/roteiro-07-bellmann-ford",
+    "p3/grafos/roteiros/Nova pasta",
+    "p3/grafos/roteiros/roteiro-06-dijkstra/meu_grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/roteiro-06-dijkstra/grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/roteiro-06-dijkstra/meu_grafo_matriz_adj_dir/grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/roteiro-06-dijkstra/meu_grafo_matriz_adj_dir/meu_grafo_matriz_adj_dir.py",
+    "p3/grafos/roteiros/roteiro-06-dijkstra/meu_grafo_matriz_adj_dir",
     "README.md",
     "p6/padroes-de-projeto/atividade-sistema/diagrama.svg",
     "p5/banco-de-dados/modelo-entidade-relacionamento/Cardinalidades.md",
