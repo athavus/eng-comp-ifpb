@@ -1,0 +1,35 @@
+QUESTÃO 1) Usando as suas próprias palavras, descreva a diferença entre verificação e validação.
+
+RESPOSTA:
+
+
+QUESTÃO 2) Descreva com suas palavras a(s) relação(ões) entre requisitos e arquitetura do software levantados no projeto e os impactos
+nos testes.
+
+RESPOSTA:
+
+
+QUESTÃO 3) Descreva o dilema da qualidade de software com suas próprias palavras. Por que é tão difícil garantir qualidade de software.
+
+RESPOSTA:
+
+
+QUESTÃO 4) Leia o escopo de um sistema implementado em JAVA:
+
+"O sistema foi implementado para operacionalizar as consultas de uma clínica de nutrição.  O sistema possui três cadastros. O primeiro cadastro é do nutricionista, devem ser coletadas as informações de nome, idade, especialidade e matrícula. Um segundo cadastro a ser implementado são dos pacientes, onde devem ser armazenadas as informações: nome, idade, peso, altura e plano de saúde. Os possíveis planos de saúde são PLANO_VIDA, HAP_SAUDE e UT_MAIS. Cada nutricionista poderá atender por um ou mais planos, todos os nutricionistas atendem também com pagamento em dinheiro. Por fim, deverá ser criado um cadastro para consulta. Nesta tela deve ser apresentada a lista dos pacientes, depois de selecionar o paciente, devem surgir apenas os nutricionistas disponíveis para atendimento de acordo com o plano de saúde do paciente selecionado. Para finalizar a consulta, uma data+horário deverá ser informado."
+
+Responda:
+
+a) Por que testar esse sistema?
+
+b) Cite possíveis defeitos que esse software pode conter que seriam descobertos com testes? Liste pelo menos 10.
+
+c) De acordo com a resposta do item anterior, como você priorizaria em nível de relevância os defeitos? Faça um ranking do maior para 
+o de menor relevância.
+
+RESPOSTA:
+
+
+QUESTÃO 5) Você recebeu a proposta de ser o(a) Profissional responsável pelo setor de Qualidade da empresa da notícia da imagem. Os acionistas lhe pediram uma avaliação da situação: Por quê ocorreu? Como deveria ter sido feito? e o quê você fará?
+
+RESPOSTA:
