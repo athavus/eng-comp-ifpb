@@ -1,0 +1,61 @@
+QUESTÃO 1) Usando as suas próprias palavras, descreva a diferença entre verificação e validação.
+
+RESPOSTA: A diferença entre validação e verificação é o escopo que agrega, onde a validação é bem mais referente ao produto que será entregue ao cliente, se ele está correto, se está atendendo as necessidades reais do cliente ou usuário do sistema, sem considerar tanto a parte técnica. Enquanto a verificação se trata da noção das especificações e dos requisitos documentados, para garantir que tudo seja atendido, sendo mais técnico, ambos tem relação com a qualidade do produto, mas em âmbitos diferentes.
+
+QUESTÃO 2) Descreva com suas palavras a(s) relação(ões) entre requisitos e arquitetura do software levantados no projeto e os impactos
+nos testes.
+
+RESPOSTA: Os requisitos de software são a base do que define as regras de negócio, descrevendo o que o sistema deve realizar e que regras ele deve obedecer, além do que deve ser testado na aplicação, enquanto a arquitetura de software é responsável por organizar como os requisitos serão implementados em uma aplicação ou solução, estruturando os módulos, tecnologias, camadas, componentes e todas as interações entre os mesmos, determinando como os testes serão estruturados e que pipeline eles devem seguir.
+
+
+QUESTÃO 3) Descreva o dilema da qualidade de software com suas próprias palavras. Por que é tão difícil garantir qualidade de software.
+
+RESPOSTA: O dilema da qualidade de software envolve o balanceamento entre tempo, custo e qualidade, onde o prazo curto e o orçamento limitado para entregas gera uma pressão no desenvolvimento, causando quase que inevitavelmente a perca da qualidade do software e aumentando o risco de um produto que tenha mais erros ou que não cumpra corretamente com às necessidades do usuário. Sendo difícil garantir a qualidade de um software por conta do balanço entre complexidade que uma aplicação pode atingir, as mudanças constantes que não foram imaginadas, as limitações de recursos (tempo e dinheiro) que podem impedir que tudo consiga ser devidamente testado e a imprevisibilidade do usuário, pois ele pode usar o sistema de uma forma que não foi prevista inicialmente.  
+
+
+QUESTÃO 4) Leia o escopo de um sistema implementado em JAVA:
+
+"O sistema foi implementado para operacionalizar as consultas de uma clínica de nutrição.  O sistema possui três cadastros. O primeiro cadastro é do nutricionista, devem ser coletadas as informações de nome, idade, especialidade e matrícula. Um segundo cadastro a ser implementado são dos pacientes, onde devem ser armazenadas as informações: nome, idade, peso, altura e plano de saúde. Os possíveis planos de saúde são PLANO_VIDA, HAP_SAUDE e UT_MAIS. Cada nutricionista poderá atender por um ou mais planos, todos os nutricionistas atendem também com pagamento em dinheiro. Por fim, deverá ser criado um cadastro para consulta. Nesta tela deve ser apresentada a lista dos pacientes, depois de selecionar o paciente, devem surgir apenas os nutricionistas disponíveis para atendimento de acordo com o plano de saúde do paciente selecionado. Para finalizar a consulta, uma data+horário deverá ser informado."
+
+Responda:
+
+a) Por que testar esse sistema?
+
+b) Cite possíveis defeitos que esse software pode conter que seriam descobertos com testes? Liste pelo menos 10.
+
+c) De acordo com a resposta do item anterior, como você priorizaria em nível de relevância os defeitos? Faça um ranking do maior para 
+o de menor relevância.
+
+RESPOSTA:
+
+a) Testar esse sistema é importante por conta da criticidade envolvida com sistemas médicos, onde falhas impactam diretamente na saúde de pacientes e nas operações de uma clínica, como o sistema manipula dados sensíveis e possui regras de negócio complexas envolvendo as associações entre planos de saúde e os nutricionistas disponíveis. Falhas podem causar atrasos ou interrupções no atendimento, acarretando em um prejuízo operacional.
+
+b) Possíveis defeitos identificáveis: Cadastro de nutricionistas duplicados, validação inadequada de idade com valores negativos, cadastro de pacientes com peso e altura inválidos, falha na validação de planos de saúde inexistentes, erro na exibição de nutricionistas disponíveis por plano, agendamento de consulta em data/horário do passado, ter duas consultas marcadas no mesmo horário para o mesmo nutricionista, falha ao persistir dados no banco, erro ao filtrar pacientes na lista, falha na validação de campos obrigatórios causando linhas vazias, erro de concorrência quando mais de um usuário agenda uma consulta no mesmo momento.
+
+c) Ranking de relevância (do maior para menor): 
+- Ter duas consultas marcadas no mesmo horário para o mesmo nutricionista; 
+- Erro na exibição de nutricionistas disponíveis por plano; 
+- Falha ao persistir dados no banco;
+- Erro de concorrência quando mais de um usuário agenda uma consulta no mesmo momento;
+- Agendamento de consulta em data/horário do passado;
+- Cadastro de nutricionistas duplicados; 
+- Falha na validação de campos obrigatórios causando linhas vazias
+- Validação inadequada de idade com valores negativos
+- Cadastro de pacientes com peso e altura inválidos
+- Erro ao filtrar pacientes na lista
+- Falha na validação de planos de saúde inexistentes. 
+
+
+QUESTÃO 5) Você recebeu a proposta de ser o(a) Profissional responsável pelo setor de Qualidade da empresa da notícia da imagem. Os acionistas lhe pediram uma avaliação da situação: Por quê ocorreu? Como deveria ter sido feito? e o quê você fará?
+
+RESPOSTA: 
+
+Por quê ocorreu?
+Ocorreu devido a uma falha de software que comprometeu o veículo, causando um acidente fatal. Possivelmente por conta de testes insuficientes em certos cenários, neste caso, em ambientes como este local da China, ou então por falhas na validação dos requisitos de segurança do carro, ou problemas técnicos envolvendo o software e os sensores/atuadores do carro.
+
+Como deveria ter sido feito?
+Deveria ter sido feita uma verificação mais robusta em todos os níveis da aplicação, implementando testes mais robustos, com cenários de falha e condições mais extremas para garantir o funcionamento do carro independente do ambiente em que ele seja colocado, divergindo do padrão. Também deveria ter sido feita uma análise de segurança mais aprofundada, de maneira que esse tipo de acidente conseguisse ser evitado.
+
+O que eu farei? (Considerando que sou o responsável pelo setor de qualidade da empresa em questão)
+Reproduzir a falha para identificar a causa raiz da mesma, através da análise de logs, vídeos ou qualquer material que estiver disponível. A partir disso, realizar uma revisão do processo de desenvolvimento do carro, para entender onde essa falha se manifesta, expandindo a cobertura de testes para prevenir que outros acidentes venham a acontecer, de maneira que prejudique o nome da empresa fabricante para os acionistas e clientes
+
