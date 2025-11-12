@@ -27,7 +27,7 @@ while True:
                 lampada = 1
         case 3:
             if modo == 1:
-                lampada = 0 
+                lampada = 0
         case 4:
             if modo == 0:
                 lampada = not lampada
