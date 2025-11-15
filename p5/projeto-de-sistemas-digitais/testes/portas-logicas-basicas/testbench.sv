@@ -1,21 +1,24 @@
 module tb;
-  // PORTA AND
+  // VALORES DE ENTRADA E SAÍDA
   logic and_a, and_b, and_result;
-  porta_and dut_and(.a(and_a), .b(and_b), .result(and_result));
   logic or_a, or_b, or_result;
-  porta_or dut_or(.a(or_a), .b(or_b), .result(or_result));
   logic not_a, not_result;
-  porta_not dut_not(.a(not_a), .result(not_result));
   logic nand_a, nand_b, nand_result;
-  porta_nand dut_nand(.a(nand_a), .b(nand_b), .result(nand_result));
   logic nor_a, nor_b, nor_result;
-  porta_nor dut_nor(.a(nor_a), .b(nor_b), .result(nor_result));
   logic xor_a, xor_b, xor_result;
-  porta_xor dut_xor(.a(xor_a), .b(xor_b), .result(xor_result));
   logic xnor_a, xnor_b, xnor_result;
+
+  // INSTÂNCIAS DOS MÓDULOS
+  porta_and dut_and(.a(and_a), .b(and_b), .result(and_result));
+  porta_or dut_or(.a(or_a), .b(or_b), .result(or_result));
+  porta_not dut_not(.a(not_a), .result(not_result));
+  porta_nand dut_nand(.a(nand_a), .b(nand_b), .result(nand_result));
+  porta_nor dut_nor(.a(nor_a), .b(nor_b), .result(nor_result));
+  porta_xor dut_xor(.a(xor_a), .b(xor_b), .result(xor_result));
   porta_xnor dut_xnor(.a(xnor_a), .b(xnor_b), .result(xnor_result));
 
   initial begin
+    // PORTA AND
     $display("== TESTES DA PORTA AND ==");
     $display("a     b      |     result");
 
@@ -133,6 +136,7 @@ module tb;
     xnor_a = 1;xnor_b = 1;
     #5
     $display("%b     %b      |        %b", xnor_a, xnor_b, xnor_result);
-  	$finish;
+
+    $finish;
   end
 endmodule
