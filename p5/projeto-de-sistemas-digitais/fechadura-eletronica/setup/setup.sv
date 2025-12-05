@@ -1,4 +1,3 @@
-
 module decodificador_de_teclado (
 input   logic       clk,
 input   logic       rst,
