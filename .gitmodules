@@ -1,3 +1,6 @@
 [submodule "p3/grafos/roteiros/atividades_grafos"]
 	path = p3/grafos/roteiros/atividades_grafos
 	url = https://github.com/henriquecunha2/atividades_grafos.git
+[submodule "p6/padroes-de-projeto/projeto-final/panic-assistance-button"]
+	path = p6/padroes-de-projeto/projeto-final/panic-assistance-button
+	url = git@github.com:athavus/panic-assistance-button.git
