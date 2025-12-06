@@ -4,3 +4,6 @@
 [submodule "p6/padroes-de-projeto/projeto-final/panic-assistance-button"]
 	path = p6/padroes-de-projeto/projeto-final/panic-assistance-button
 	url = git@github.com:athavus/panic-assistance-button.git
+[submodule "p8/testes-de-software/projeto-final/bandline"]
+	path = p8/testes-de-software/projeto-final/bandline
+	url = git@github.com:athavus/bandline
