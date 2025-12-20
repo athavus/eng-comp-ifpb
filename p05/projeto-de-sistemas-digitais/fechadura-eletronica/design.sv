@@ -1,9 +1,10 @@
 // TECLADO COMEÇA NA LINHA 38 E TERMINA NA LINHA 444
-// SETUP COMEÇA NA LINHA 446 E TERMINA NA LINHA 832
-// OPERACIONAL COMEÇA NA LINHA 834 E TERMINA NA LINHA 1181
-// DISPLAY COMEÇA NA LINHA 1184 E TERMINA NA LINHA 1267
-// RESET COMEÇA NA LINHA 1270 E TERMINA NA LINHA 1297
-// FECHADURA TOP COMEÇA NA LINHA 1299 E TERMINA NA LINHA 1386
+// SETUP COMEÇA NA LINHA 446 E TERMINA NA LINHA 815
+// OPERACIONAL COMEÇA NA LINHA 817 E TERMINA NA LINHA 1170
+// DISPLAY COMEÇA NA LINHA 1173 E TERMINA NA LINHA 1256
+// RESET HOLD COMEÇA NA LINHA 1260 E TERMINA LINHA 1283
+// FECHADURA TOP COMEÇA NA LINHA 1287 E TERMINA NA LINHA 1371
+
 
 
 
@@ -47,7 +48,7 @@ output		logic 		tecla_valid
 );
 
 
-localparam T_DEBOUNCE = 100;
+localparam T_DEBOUCE = 100;
 localparam logic [3:0] map_out [0:3] = '{
     4'b1110,
     4'b1101,
@@ -56,180 +57,180 @@ localparam logic [3:0] map_out [0:3] = '{
 };
 
 typedef enum logic [2:0] {
-    SCAN,
+    VARREDURA,
     DEBOUNCE,
-    DECODE,
-    SEND_VALID_DIGIT,
-    WAIT_RELEASE
+    DECODIFICAR,
+    ENVIAR_DIGITO_VALID,
+    ESPERAR_LIBERACAO
 } estados_t;
 
 typedef enum logic [1:0] {
-    NEXT_LINE,
-    CHECK,
-    CLEAN
+    PROX_LINHA,
+    VERIFICAR,
+    LIMPO
 } sub_machine_t;
 
-estados_t state;
-sub_machine_t sub_machine;
+estados_t estado;
+sub_machine_t sub_maquina;
 int deb_counter;
-logic [1:0] current_line; //define qual é a linha atual
-logic [3:0] decoded_key, pressed_column;
+logic [1:0] lin_atual; //define qual é a linha atual
+logic [3:0] tecla_decodificada, coluna_pressionada;
 
-logic [1:0] clean_line;
+logic [1:0] linha_limpa;
 
 
-logic key_pressed; //define se tem uma tecla pressionada
-logic debounce_exceeded; // define se o contador ultrapassou o tempo de debounce
+logic tecla_pressionada; //define se tem uma tecla pressionada
+logic ultrapassou_debounce; // define se o contador ultrapassou o tempo de debounce
 
 // assign de variaveis de branch.
 //informa se há alguma tecla sendo pressionada
-assign key_pressed = col_matriz != 4'b1111;
-assign debounce_exceeded = deb_counter >= T_DEBOUNCE;
+assign tecla_pressionada = col_matriz != 4'b1111;
+assign ultrapassou_debounce = deb_counter >= T_DEBOUCE;
 
 always_ff @( posedge clk or posedge rst ) begin
     if(rst)begin
-        state <= SCAN;
-        current_line <= 0;
+        estado <= VARREDURA;
+        lin_atual <= 0;
         deb_counter <= 1;
-        decoded_key <= 4'hF;
-        sub_machine <= NEXT_LINE;
-        clean_line <= 0;
-        pressed_column <= 0;
+        tecla_decodificada <= 4'hF;
+        sub_maquina <= PROX_LINHA;
+        linha_limpa <= 0;
+        coluna_pressionada <= 0;
     end
     else
-        case (state)
-            SCAN:begin
-                if(key_pressed)begin
-                    state <= DEBOUNCE;
+        case (estado)
+            VARREDURA:begin
+                if(tecla_pressionada)begin
+                    estado <= DEBOUNCE;
                     deb_counter <= 1;
-                    pressed_column <= col_matriz;
+                    coluna_pressionada <= col_matriz;
                 end
                 else begin
-                    lin_matriz <= map_out[current_line];
-                    current_line <= current_line + 1;
+                    lin_matriz <= map_out[lin_atual];
+                    lin_atual <= lin_atual + 1;
                 end
             end
             DEBOUNCE:begin
-                if(debounce_exceeded) begin
-                    state <= DECODE;
+                if(ultrapassou_debounce) begin
+                    estado <= DECODIFICAR;
                     deb_counter <= 1;
                 end
-                else if(!key_pressed)begin
-                    state <= SCAN;
+                else if(!tecla_pressionada)begin
+                    estado <= VARREDURA;
                     deb_counter <= 1;
                 end
                 else begin
                     deb_counter <= deb_counter +1;
                 end
             end
-            DECODE:begin
-                case ({lin_matriz, pressed_column})
+            DECODIFICAR:begin
+                case ({lin_matriz, coluna_pressionada})
                     8'b0111_0111:begin
-                        decoded_key <= 'h1; //1
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h1; //1
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b0111_1011:begin
-                        decoded_key <= 'h2; //2
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h2; //2
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b0111_1101:begin
-                        decoded_key <= 'h3; //3
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h3; //3
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b0111_1110:begin
-                        decoded_key <= 'hA; //A
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'hA; //A
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1011_0111:begin
-                        decoded_key <= 'h4; //4
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h4; //4
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1011_1011:begin
-                        decoded_key <= 'h5; //5
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h5; //5
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1011_1101:begin
-                        decoded_key <= 'h6; //6
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h6; //6
+                        estado <= ENVIAR_DIGITO_VALID;
                         end
                     8'b1011_1110:begin
-                        decoded_key <= 'hB; //b
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'hB; //b
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1101_0111:begin
-                        decoded_key <= 'h7; //7
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h7; //7
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1101_1011:begin
-                        decoded_key <= 'h8; //8
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h8; //8
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1101_1101:begin
-                        decoded_key <= 'h9; //9
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h9; //9
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1101_1110:begin
-                        decoded_key <= 'hC; //c
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'hC; //c
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1110_0111:begin
-                        decoded_key <= 'hF; //*
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'hF; //*
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1110_1011:begin
-                        decoded_key <= 'h0; //0
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'h0; //0
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1110_1101:begin
-                        decoded_key <= 'hE; //#
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'hE; //#
+                        estado <= ENVIAR_DIGITO_VALID;
                     end
                     8'b1110_1110:begin
-                        decoded_key <= 'hD; // D
-                        state <= SEND_VALID_DIGIT;
+                        tecla_decodificada <= 'hD; // D
+                        estado <= ENVIAR_DIGITO_VALID;
                         end
                     default:begin
-                        state <= SCAN;
+                        estado <= VARREDURA;
                     end
                 endcase
             end
 
-            SEND_VALID_DIGIT:begin
-                state <= WAIT_RELEASE;
-                sub_machine <= NEXT_LINE;
-                clean_line <= 0;
+            ENVIAR_DIGITO_VALID:begin
+                estado <= ESPERAR_LIBERACAO;
+                sub_maquina <= PROX_LINHA;
+                linha_limpa <= 0;
             end
-            WAIT_RELEASE:begin
-                case (sub_machine)
-                    NEXT_LINE:begin
-                        lin_matriz <= map_out[clean_line];
-                        sub_machine <= CHECK;
+            ESPERAR_LIBERACAO:begin
+                case (sub_maquina)
+                    PROX_LINHA:begin
+                        lin_matriz <= map_out[linha_limpa];
+                        sub_maquina <= VERIFICAR;
                     end
-                    CHECK:begin
-                        if(!key_pressed)begin
-                            if(clean_line == 3)begin
-                                sub_machine <= CLEAN;
+                    VERIFICAR:begin
+                        if(!tecla_pressionada)begin
+                            if(linha_limpa == 3)begin
+                                sub_maquina <= LIMPO;
                             end
                             else begin
-                                clean_line <= clean_line + 1;
-                                sub_machine <= NEXT_LINE;
+                                linha_limpa <= linha_limpa + 1;
+                                sub_maquina <= PROX_LINHA;
                             end
                         end
                         else
-                            sub_machine <= NEXT_LINE;
+                            sub_maquina <= PROX_LINHA;
                     end
-                    CLEAN:begin
-                        state <= SCAN;
-                        clean_line <= 0;
-                        sub_machine <= NEXT_LINE;
+                    LIMPO:begin
+                        estado <= VARREDURA;
+                        linha_limpa <= 0;
+                        sub_maquina <= PROX_LINHA;
                     end
                     default:
-                        sub_machine <= NEXT_LINE;
+                        sub_maquina <= PROX_LINHA;
                 endcase
             end
 
             default:
-                state <= SCAN;
+                estado <= VARREDURA;
         endcase
 
 end
@@ -241,17 +242,17 @@ always_comb begin
         tecla_valid = 0;
     end
     else
-        case (state)
-            {SCAN, DEBOUNCE, WAIT_RELEASE}:begin
+        case (estado)
+            {VARREDURA, DEBOUNCE, ESPERAR_LIBERACAO}:begin
                 tecla_value = 4'hF;
                 tecla_valid = 0;
             end
-            DECODE:begin
-                tecla_value = decoded_key;
+            DECODIFICAR:begin
+                tecla_value = tecla_decodificada;
                 tecla_valid = 0;
             end
-            SEND_VALID_DIGIT:begin
-                tecla_value = decoded_key;
+            ENVIAR_DIGITO_VALID:begin
+                tecla_value = tecla_decodificada;
                 tecla_valid = 1;
             end
             default:begin
@@ -273,16 +274,16 @@ module complemento_teclado (
     input logic tecla_valid,
     output logic digitos_valid,
     output senhaPac_t digitos_value
-);
+    );
 
-    function senhaPac_t shift_bus (
+    function senhaPac_t shiftar_barramento (
         input senhaPac_t in_pac,
         input logic [3:0] new_digit
         );
         return {(in_pac.digits[18:0]), new_digit};
     endfunction
 
-    function senhaPac_t fill_bus (
+    function senhaPac_t preencher_barramento (
         input logic [3:0] value
         );
         return {20{value}};
@@ -301,79 +302,79 @@ module complemento_teclado (
         TIME_OUT_S
     } estados_t;
 
-    estados_t state;
+    estados_t estado;
 
-    logic [3:0] received_code;
-    senhaPac_t temporary;
-    int timeout_counter;
+    logic [3:0] codigo_recebido;
+    senhaPac_t temporario;
+    int contador_timeout;
 
-    logic counter_control;
-    logic counter_exceeded;
-    logic counter_alert;
-    assign counter_exceeded = timeout_counter >= TIME_OUT;
+    logic controle_contador;
+    logic contador_ultrapassou;
+    logic alerta_contador;
+    assign contador_ultrapassou = contador_timeout >= TIME_OUT;
 
-    assign digitos_valid = state == ENVIAR_DIGITO_VALID;
-    assign digitos_value = temporary;
+    assign digitos_valid = estado == ENVIAR_DIGITO_VALID;
+    assign digitos_value = temporario;
 
     always_ff @(posedge clk or posedge rst or negedge enable) begin
         if(rst || ! enable) begin
-            state <= ESPERAR;
-            received_code <= 4'hF;
-            counter_control <= 0;
-            temporary = {20{4'hF}};
+            estado <= ESPERAR;
+            codigo_recebido <= 4'hF;
+            controle_contador <= 0;
+            temporario <= {20{4'hF}};
         end
-        else if (counter_alert)begin
-            counter_control <= 0;
-            state <= TIME_OUT_S;
+        else if (alerta_contador)begin
+            controle_contador <= 0;
+            estado <= TIME_OUT_S;
         end
         else begin
-            case (state)
+            case (estado)
                 ESPERAR:begin
                     if(tecla_valid)begin
-                        received_code <= tecla_value;
-                        state <= DECIDIR;
-                        counter_control <= 0;
+                        codigo_recebido <= tecla_value;
+                        estado <= DECIDIR;
+                        controle_contador <= 0;
                     end
                 end
                 DECIDIR:begin
-                    counter_control <= 1;
-                    case (received_code)
+                    controle_contador <= 1;
+                    case (codigo_recebido)
                         {4'hC, 4'hA, 4'hB, 4'hD}:begin //teclas que não importam.
-                            state <=  ESPERAR;
+                            estado <=  ESPERAR;
                         end
                         4'hF:begin //asterisco
-                            state <= ENVIAR_DIGITO_VALID;
+                            estado <= ENVIAR_DIGITO_VALID;
                         end
                         4'hE: begin //HASHTAG
-                            state <= HASHTAG;
+                            estado <= HASHTAG;
                         end
                         default: begin
-                            state <= SHIFT;
+                            estado <= SHIFT;
                         end
                     endcase
                 end
                 SHIFT: begin
-                    temporary <= shift_bus(digitos_value, received_code);
-                    state <= ESPERAR;
+                    temporario <= shiftar_barramento(digitos_value, codigo_recebido);
+                    estado <= ESPERAR;
                 end
                 CLEAR:begin
-                    temporary <= fill_bus(4'hF);
-                    state <= ESPERAR;
+                    estado <= ESPERAR;
                 end
                 HASHTAG:begin
-                    temporary <= fill_bus(4'hB);
-                    state <= ENVIAR_DIGITO_VALID;
+                    temporario <= preencher_barramento(4'hB);
+                    estado <= ENVIAR_DIGITO_VALID;
                 end
                 ENVIAR_DIGITO_VALID: begin
-                    state <= CLEAR;
-                    counter_control <= 0;
+                    estado <= CLEAR;
+                    controle_contador <= 0;
+						 temporario <= preencher_barramento(4'hF);
                 end
                 TIME_OUT_S: begin
-                    temporary <= fill_bus(4'hE);
-                    state <= ENVIAR_DIGITO_VALID;
+                    temporario <= preencher_barramento(4'hE);
+                    estado <= ENVIAR_DIGITO_VALID;
                 end
                 default:begin
-                    state <= ESPERAR;
+                    estado <= ESPERAR;
                 end
             endcase
         end
@@ -383,19 +384,19 @@ module complemento_teclado (
     //contador de 5 sec
     always_ff @(posedge clk or posedge rst) begin
         if(rst)begin
-            timeout_counter <= 0;
-            counter_alert <= 0;
+            contador_timeout <= 0;
+            alerta_contador <= 0;
         end
         else begin
-            if (!counter_control)begin
-                timeout_counter <= 0;
-                counter_alert <= 0;
+            if (!controle_contador)begin
+                contador_timeout <= 0;
+                alerta_contador <= 0;
             end
-            else if(counter_exceeded)begin
-                counter_alert <= 1;
+            else if(contador_ultrapassou)begin
+                alerta_contador <= 1;
             end
             else begin
-                timeout_counter <= timeout_counter + 1;
+                contador_timeout <= contador_timeout + 1;
             end
         end
     end
@@ -443,7 +444,7 @@ endmodule
 
 //===================================== FIM TECLADO ===========================================
 
-//=======================================  SETUP ==============================================
+//==================================== SETUP ====================================================
 
 module setup (
 	input		logic		clk,
@@ -469,258 +470,256 @@ module setup (
         SENHA_3,
         SENHA_4,
         ATUALIZAR_BARRAMENTO,
-        ENVIAR_DADOS
+        ENVIAR_DADOS,
+        ESPERAR_SETUP_ON_DOWN
     } estados_t;
 
 
-    estados_t state;
-    setupPac_t temp_pac;
-    logic [3:0] unit_digit, tens_digit;
-    int sum_tens_digit;
+    estados_t estado;
+    setupPac_t pac_temp;
+    logic [3:0] digito_unidade_btime, digito_dezena_btime, digito_bip_status, digito_dezena_ttime, digito_unidade_ttime;
+    int soma_btime, soma_ttime;
+		logic flag, flag2;
+    logic confirmou, teclado_tempo_estourou, pressionou_hastag;
 
-    logic confirmed, keyboard_timeout, pressed_hashtag;
-
-    assign confirmed = digitos_valid;
-    assign keyboard_timeout = digitos_value.digits[0] == 4'hE;
-    assign pressed_hashtag = digitos_value.digits[0] == 4'hB;
-    assign sum_tens_digit = (tens_digit * 10) + unit_digit;
-
-
+    assign confirmou = digitos_valid;
+    assign teclado_tempo_estourou = digitos_value.digits[0] == 4'hE;
+    assign pressionou_hastag = digitos_value.digits[0] == 4'hB;
+    assign soma_btime = (digito_dezena_btime * 10) + digito_unidade_btime;
+    assign soma_ttime = (digito_dezena_ttime * 10) + digito_unidade_ttime;
 
     always_ff @( posedge clk or posedge rst ) begin
         if(rst)begin
-            state <= IDLE;
+            estado <= IDLE;
 
-            temp_pac.bip_status <= 1;
-            temp_pac.bip_time <= 5;
-            temp_pac.tranca_aut_time <= 5;
-            temp_pac.senha_master <= {{16{4'hF}}, 4'h1, 4'h2, 4'h3, 4'h4};
-            temp_pac.senha_1 <= {20{4'hF}};
-            temp_pac.senha_2 <= {20{4'hF}};
-            temp_pac.senha_3 <= {20{4'hF}};
-            temp_pac.senha_4 <= {20{4'hF}};
+            pac_temp.bip_status <= 1;
+            pac_temp.bip_time <= 6'd5;
+            pac_temp.tranca_aut_time <= 6'd5;
+            pac_temp.senha_master <= {{16{4'hF}}, 4'h1, 4'h2, 4'h3, 4'h4};
+            pac_temp.senha_1 <= {20{4'hF}};
+            pac_temp.senha_2 <= {20{4'hF}};
+            pac_temp.senha_3 <= {20{4'hF}};
+            pac_temp.senha_4 <= {20{4'hF}};
 
             data_setup_new.bip_status <= 1;
-            data_setup_new.bip_time <= 5;
-            data_setup_new.tranca_aut_time <= 5;
+            data_setup_new.bip_time <= 6'd5;
+            data_setup_new.tranca_aut_time <= 6'd5;
             data_setup_new.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
             data_setup_new.senha_1 <= {20{4'hF}};
             data_setup_new.senha_2 <= {20{4'hF}};
             data_setup_new.senha_3 <= {20{4'hF}};
             data_setup_new.senha_4 <= {20{4'hF}};
 
-            tens_digit <= 4'hF;
-            unit_digit <= 4'hF;
-
+            digito_dezena_btime <= 4'h0;
+            digito_unidade_btime <= 4'h5;
+            digito_dezena_ttime <= 4'h0;
+            digito_unidade_ttime <= 4'h5;
+            digito_bip_status <= 4'h1;
+				flag <= 0;
+				flag2 <= 1;
         end
 
         else begin
-            case (state)
+            case (estado)
                 IDLE:begin
                     data_setup_ok <= 0;
+                    pac_temp <= data_setup_new;
                     if(setup_on)begin
-                        state <= ATIVAR_BIP;
-                        unit_digit <= data_setup_new.bip_status;
+                        estado <= ATIVAR_BIP;
+                        digito_bip_status <= data_setup_new.bip_status;
+								flag <= 0;
+								flag2 <= 1;
                     end
                 end
                 ATIVAR_BIP:begin
-                    if(confirmed)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou)begin
+                        if(pressionou_hastag)begin
+                            estado <= ATUALIZAR_BARRAMENTO;
                         end
-                        else if(!keyboard_timeout)begin
-                            temp_pac.bip_status <= unit_digit;
-                            state <= TEMPO_BIP;
-                            unit_digit <= temp_pac.bip_time % 10;
-                            tens_digit <= temp_pac.bip_time / 10;
+                        else if(!teclado_tempo_estourou)begin
+                            pac_temp.bip_status <= digito_bip_status;
+                            estado <= TEMPO_BIP;
+                            digito_unidade_btime <= pac_temp.bip_time % 10;
+                            digito_dezena_btime <= pac_temp.bip_time / 10;
                         end
                     end
                     else begin
                         if(digitos_value.digits[0] == 4'h1 || digitos_value.digits[0] == 4'h0)begin
-                            unit_digit <= digitos_value.digits[0];
+                            digito_bip_status <= digitos_value.digits[0];
                         end
                     end
                 end
                 TEMPO_BIP:begin
-                    if(confirmed)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou)begin
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
-                        else if(!keyboard_timeout)begin
-                            if(sum_tens_digit <= 60 && sum_tens_digit >= 5 )begin
-                                temp_pac.bip_time <= sum_tens_digit ;
+                        else if(!teclado_tempo_estourou)begin
+                            if(soma_btime <= 60 && soma_btime >= 5 )begin
+                                pac_temp.bip_time <= soma_btime ;
                             end
                             else begin
-                                temp_pac.bip_time <= sum_tens_digit > 60 ? 60 : 5;
+                                pac_temp.bip_time <= soma_btime > 60 ? 60 : 5;
                             end
-                            state <= TEMPO_FECHAMENTO;
-                            unit_digit <= temp_pac.tranca_aut_time % 10;
-                            tens_digit <= temp_pac.tranca_aut_time / 10;
+                            estado <= TEMPO_FECHAMENTO;
+                            digito_unidade_ttime <= pac_temp.tranca_aut_time % 10;
+                            digito_dezena_ttime <= pac_temp.tranca_aut_time / 10;
                         end
+								flag <= 0;
+								flag2 <= 1;
                     end
                     else begin
-                        if(
-                        digitos_value.digits[0] == 4'h0 ||
-                        digitos_value.digits[0] == 4'h1 ||
-                        digitos_value.digits[0] == 4'h2 ||
-                        digitos_value.digits[0] == 4'h3 ||
-                        digitos_value.digits[0] == 4'h4 ||
-                        digitos_value.digits[0] == 4'h5 ||
-                        digitos_value.digits[0] == 4'h6 ||
-                        digitos_value.digits[0] == 4'h7 ||
-                        digitos_value.digits[0] == 4'h8 ||
-                        digitos_value.digits[0] == 4'h9 )begin
-                            unit_digit <= digitos_value.digits[0];
+                        if(digitos_value.digits[0] == 4'hF || flag == 0)begin
+                            digito_dezena_btime <= digito_dezena_btime;
+                            digito_unidade_btime <= digito_unidade_btime;
+									 flag <= 1;
                         end
-                        if(
-                        digitos_value.digits[1] == 4'h0 ||
-                        digitos_value.digits[1] == 4'h1 ||
-                        digitos_value.digits[1] == 4'h2 ||
-                        digitos_value.digits[1] == 4'h3 ||
-                        digitos_value.digits[1] == 4'h4 ||
-                        digitos_value.digits[1] == 4'h5 ||
-                        digitos_value.digits[1] == 4'h6 ||
-                        digitos_value.digits[1] == 4'h7 ||
-                        digitos_value.digits[1] == 4'h8 ||
-                        digitos_value.digits[1] == 4'h9 )begin
-                                tens_digit <= digitos_value.digits[1];
-                            end
+                        else if(digitos_value.digits[1] == 4'hF && flag2 == 1) begin
+                            digito_dezena_btime <= digito_unidade_btime;
+                            digito_unidade_btime <= digitos_value.digits[0];
+									 flag2 <= 0;
+
+                        end
+                        else if (digitos_value.digits[1] != 4'hF && digitos_value.digits[0] != 4'hF  )begin
+                            digito_dezena_btime <= digitos_value.digits[1];
+                            digito_unidade_btime <= digitos_value.digits[0];
+                        end
                     end
                 end
                 TEMPO_FECHAMENTO:begin
-                    if(confirmed)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou)begin
+								flag <= 0;
+								flag2 <= 1;
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
-                        else if(!keyboard_timeout)begin
-                            if(sum_tens_digit <= 60 && sum_tens_digit >= 5 )begin
-                                temp_pac.tranca_aut_time <= sum_tens_digit ;
+                        else if(!teclado_tempo_estourou)begin
+                            if(soma_ttime <= 60 && soma_ttime >= 5 )begin
+                                pac_temp.tranca_aut_time <= soma_ttime ;
                             end
                             else begin
-                                temp_pac.tranca_aut_time <= sum_tens_digit > 60 ? 60 : 5;
+                                pac_temp.tranca_aut_time <= soma_ttime > 60 ? 60 : 5;
                             end
-                            state <= SENHA_MASTER;
+                            estado <= SENHA_MASTER;
                         end
                     end
                     else begin
-                        if(
-                        digitos_value.digits[0] == 4'h0 ||
-                        digitos_value.digits[0] == 4'h1 ||
-                        digitos_value.digits[0] == 4'h2 ||
-                        digitos_value.digits[0] == 4'h3 ||
-                        digitos_value.digits[0] == 4'h4 ||
-                        digitos_value.digits[0] == 4'h5 ||
-                        digitos_value.digits[0] == 4'h6 ||
-                        digitos_value.digits[0] == 4'h7 ||
-                        digitos_value.digits[0] == 4'h8 ||
-                        digitos_value.digits[0] == 4'h9 )begin
-                            unit_digit <= digitos_value.digits[0];
+                        if(digitos_value.digits[0] == 4'hF || flag == 0)begin
+                            digito_dezena_ttime <= digito_dezena_ttime;
+                            digito_unidade_ttime <= digito_unidade_ttime;
+									 flag <= 1;
                         end
-                        if(
-                        digitos_value.digits[1] == 4'h0 ||
-                        digitos_value.digits[1] == 4'h1 ||
-                        digitos_value.digits[1] == 4'h2 ||
-                        digitos_value.digits[1] == 4'h3 ||
-                        digitos_value.digits[1] == 4'h4 ||
-                        digitos_value.digits[1] == 4'h5 ||
-                        digitos_value.digits[1] == 4'h6 ||
-                        digitos_value.digits[1] == 4'h7 ||
-                        digitos_value.digits[1] == 4'h8 ||
-                        digitos_value.digits[1] == 4'h9 )begin
-                                tens_digit <= digitos_value.digits[1];
-                            end
+                        else if(digitos_value.digits[1] == 4'hF && flag2) begin
+                            digito_dezena_ttime <= digito_unidade_ttime;
+                            digito_unidade_ttime <= digitos_value.digits[0];
+									 flag2 <= 0;
+                        end
+                        else if (digitos_value.digits[1] != 4'hF && digitos_value.digits[0] != 4'hF)begin
+                            digito_dezena_ttime <= digitos_value.digits[1];
+                            digito_unidade_ttime <= digitos_value.digits[0];
+                        end
                     end
                 end
                 SENHA_MASTER:begin
-                    if(confirmed && !keyboard_timeout)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou && !teclado_tempo_estourou)begin
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
                         else begin
                             if(digitos_value.digits[3] != 4'hF )begin
-                                state <= SENHA_1;
-                                temp_pac.senha_master <= {{8{4'hF}}, digitos_value.digits[11:0]};
+                                estado <= SENHA_1;
+                                pac_temp.senha_master <= {{8{4'hF}}, digitos_value.digits[11:0]};
                             end
-                            else if(digitos_value.digits[0] == 4'hF ) state <= SENHA_1;
+                            else if(digitos_value.digits[0] == 4'hF ) estado <= SENHA_1;
                         end
                     end
                 end
                 SENHA_1:begin
-                    if(confirmed && !keyboard_timeout)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou && !teclado_tempo_estourou)begin
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
                         else begin
-                            if(digitos_value.digits[3] != 4'hF)begin
-                                state <= SENHA_2;
-                                temp_pac.senha_1 <= {{8{4'hF}}, digitos_value.digits[11:0]};
+                            if(digitos_value.digits[3] != 4'hF && digitos_value.digits[12] == 4'hF)begin
+                                estado <= SENHA_2;
+                                pac_temp.senha_1 <= {{8{4'hF}}, digitos_value.digits[11:0]};
                             end
-                            else if(digitos_value.digits[0] == 4'hF ) state <= SENHA_2;
+                            else if(digitos_value.digits[0] == 4'hF ) estado <= SENHA_2;
                         end
                     end
                 end
                 SENHA_2:begin
-                    if(confirmed && !keyboard_timeout)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou && !teclado_tempo_estourou)begin
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
                         else begin
-                            if(digitos_value.digits[3] != 4'hF)begin
-                                state <= SENHA_3;
-                                temp_pac.senha_2 <= {{8{4'hF}}, digitos_value.digits[11:0]};
+                            if(digitos_value.digits[3] != 4'hF && digitos_value.digits[12] == 4'hF)begin
+                                estado <= SENHA_3;
+                                pac_temp.senha_2 <= {{8{4'hF}}, digitos_value.digits[11:0]};
                             end
-                            else if(digitos_value.digits[0] == 4'hF ) state <= SENHA_3;
+                            else if(digitos_value.digits[0] == 4'hF ) estado <= SENHA_3;
                         end
                     end
                 end
                 SENHA_3:begin
-                    if(confirmed && !keyboard_timeout)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou && !teclado_tempo_estourou)begin
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
                         else begin
-                            if(digitos_value.digits[3] != 4'hF)begin
-                                state <= SENHA_4;
-                                temp_pac.senha_3 <= {{8{4'hF}}, digitos_value.digits[11:0]};
+                            if(digitos_value.digits[3] != 4'hF && digitos_value.digits[12] == 4'hF)begin
+                                estado <= SENHA_4;
+                                pac_temp.senha_3 <= {{8{4'hF}}, digitos_value.digits[11:0]};
                             end
-                            else if(digitos_value.digits[0] == 4'hF ) state <= SENHA_4;
+                            else if(digitos_value.digits[0] == 4'hF ) estado <= SENHA_4;
                         end
                     end
                 end
                 SENHA_4:begin
-                    if(confirmed && !keyboard_timeout)begin
-                        if(pressed_hashtag)begin
-                            state <= ATUALIZAR_BARRAMENTO;
+                    if(confirmou && !teclado_tempo_estourou)begin
+                        if(pressionou_hastag)begin
+                          estado <= ATUALIZAR_BARRAMENTO;
                         end
                         else begin
-                            if(digitos_value.digits[3] != 4'hF)begin
-                                state <= ATUALIZAR_BARRAMENTO;
-                                temp_pac.senha_4 <= {{8{4'hF}}, digitos_value.digits[11:0]};
+                            if(digitos_value.digits[3] != 4'hF && digitos_value.digits[12] == 4'hF)begin
+                              estado <= ATUALIZAR_BARRAMENTO;
+                                pac_temp.senha_4 <= {{8{4'hF}}, digitos_value.digits[11:0]};
                             end
-                            else if(digitos_value.digits[0] == 4'hF ) state <= ATUALIZAR_BARRAMENTO;
+                            else if(digitos_value.digits[0] == 4'hF ) estado <= ATUALIZAR_BARRAMENTO;
                         end
                     end
                 end
                 ATUALIZAR_BARRAMENTO:begin
-                    data_setup_new <= temp_pac;
-                    state <= ENVIAR_DADOS;
+                    data_setup_new <= pac_temp;
+                    estado <= ENVIAR_DADOS;
                 end
                 ENVIAR_DADOS:begin
-                    state <= IDLE;
+                    estado <= ESPERAR_SETUP_ON_DOWN;
                     data_setup_ok <= 1;
                 end
+                ESPERAR_SETUP_ON_DOWN: begin
+                  if(!setup_on)begin
+                    estado <= IDLE;
+                    data_setup_ok <= 0;
+                  end
+                end
                 default:begin
-                    state <= IDLE;
-                    temp_pac.bip_status <= 1;
-                    temp_pac.bip_time <= 5;
-                    temp_pac.tranca_aut_time <= 5;
-                    temp_pac.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
-                    temp_pac.senha_1 <= {20{4'hF}};
-                    temp_pac.senha_2 <= {20{4'hF}};
-                    temp_pac.senha_3 <= {20{4'hF}};
-                    temp_pac.senha_4 <= {20{4'hF}};
-                    tens_digit <= 4'hF;
-                    unit_digit <= 4'hF;
+                    estado <= IDLE;
+                    pac_temp.bip_status <= 1;
+                    pac_temp.bip_time <= 5;
+                    pac_temp.tranca_aut_time <= 5;
+                    pac_temp.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
+                    pac_temp.senha_1 <= {20{4'hF}};
+                    pac_temp.senha_2 <= {20{4'hF}};
+                    pac_temp.senha_3 <= {20{4'hF}};
+                    pac_temp.senha_4 <= {20{4'hF}};
+                    digito_dezena_btime <= 4'h0;
+                    digito_unidade_btime <= 4'h5;
+                    digito_dezena_ttime <= 4'h0;
+                    digito_unidade_ttime <= 4'h5;
+                    digito_bip_status <= 4'h1;
+
                 end
             endcase
         end
@@ -732,7 +731,7 @@ module setup (
             bcd_pac = {6{4'hB}};
         end
         else begin
-            case (state)
+            case (estado)
                 IDLE, ATUALIZAR_BARRAMENTO, ENVIAR_DADOS:begin
                     display_en = 0;
                     bcd_pac.BCD0 = 4'hB;
@@ -744,7 +743,7 @@ module setup (
                 end
                 ATIVAR_BIP:begin
                     display_en = 1;
-                    bcd_pac.BCD0 = unit_digit;
+                    bcd_pac.BCD0 = digito_bip_status;
                     bcd_pac.BCD1 = 4'hB;
                     bcd_pac.BCD2 = 4'hB;
                     bcd_pac.BCD3 = 4'hB;
@@ -753,8 +752,8 @@ module setup (
                 end
                 TEMPO_BIP:begin
                     display_en = 1;
-                    bcd_pac.BCD0 = unit_digit;
-                    bcd_pac.BCD1 = tens_digit;
+                    bcd_pac.BCD0 = digito_unidade_btime;
+                    bcd_pac.BCD1 = digito_dezena_btime;
                     bcd_pac.BCD2 = 4'hB;
                     bcd_pac.BCD3 = 4'hB;
                     bcd_pac.BCD4 = 4'hB;
@@ -762,8 +761,8 @@ module setup (
                 end
                 TEMPO_FECHAMENTO:begin
                     display_en = 1;
-                    bcd_pac.BCD0 = unit_digit;
-                    bcd_pac.BCD1 = tens_digit;
+                    bcd_pac.BCD0 = digito_unidade_ttime;
+                    bcd_pac.BCD1 = digito_dezena_ttime;
                     bcd_pac.BCD2 = 4'hB;
                     bcd_pac.BCD3 = 4'hB;
                     bcd_pac.BCD4 = 4'hB;
@@ -833,7 +832,6 @@ endmodule
 
 // ======================================= OPERACIONAL ======================================
 
-
 module operacional(
 	input		logic		clk,
 	input		logic		rst,
@@ -854,7 +852,8 @@ module operacional(
 );
 
 	typedef enum logic [4:0] {
-		IDLE, // 0
+    RESET_STATE,
+		IDLE,
 		NO_PERTUBE,
 		VERIFICAR_SENHA,
 		TIMEOUT_SENHA_ERRADA,
@@ -867,8 +866,6 @@ module operacional(
 		ESPERAR_CONFIG,
 		ATUALIZAR_CONFIG
 	} estados_t;
-
-
 
 
 	localparam T_N_PERTUBE = 3000;
@@ -914,166 +911,174 @@ module operacional(
 
 	endfunction
 
-	estados_t state;
-	setupPac_t current_config;
-	senhaPac_t temp_password;
-	int fail_count;
-	logic password_confirmed, no_disturb_mode;
-	int	no_disturb_counter, fail_counter, lock_counter, bip_counter;
+	estados_t estado;
+	setupPac_t config_atual;
+	senhaPac_t senha_temp;
+	int quant_falhas;
+	logic confirmou_senha, modo_n_pertube;
+	int	contador_n_pertube, contador_falhas, contador_trancamento, contador_bip;
 
-	assign no_disturb_mode = no_disturb_counter >=  T_N_PERTUBE;
-	assign password_confirmed = digitos_valid;
+	assign modo_n_pertube = contador_n_pertube >=  T_N_PERTUBE;
+	assign confirmou_senha = digitos_valid;
 
-	assign setup_on = state == ESPERAR_CONFIG;
-	assign teclado_en = state != NO_PERTUBE && state != TEMPO_BIP && state != TEMPO_TRANCAMENTO && state != DESTRANCAR_PORTA && state != TIMEOUT_SENHA_ERRADA;
+	assign teclado_en = estado != NO_PERTUBE && estado != TEMPO_BIP && estado != TEMPO_TRANCAMENTO && estado != DESTRANCAR_PORTA && estado != TIMEOUT_SENHA_ERRADA;
 
-	logic previous_signal, internal_edge;
+	logic sinal_anterior, interno_borda;
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
-            previous_signal <= 1'b0;
+            sinal_anterior <= 1'b0;
         end
 		else begin
             // Guarda o estado atual para ser o "anterior" no próximo ciclo
-            previous_signal <= botao_interno;
+            sinal_anterior <= botao_interno;
         end
     end
 
-	assign internal_edge = (botao_interno == 1'b1) && (previous_signal == 1'b0);
+	assign interno_borda = (botao_interno == 1'b1) && (sinal_anterior == 1'b0);
 
 	//always principal
 	always_ff @( posedge clk or posedge rst ) begin
 		if (rst)begin
-			state <= IDLE;
-			current_config.bip_status <= 1;
-            current_config.bip_time <= 5;
-            current_config.tranca_aut_time <= 5;
-            current_config.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
-            current_config.senha_1 <= {20{4'hF}};
-            current_config.senha_2 <= {20{4'hF}};
-            current_config.senha_3 <= {20{4'hF}};
-            current_config.senha_4 <= {20{4'hF}};
-			temp_password <= {20{4'hF}};
-			fail_counter <= 0;
-			lock_counter <= 0;
-			fail_counter <= 0;
-			fail_count <= 0;
+			estado <= RESET_STATE;
+			config_atual.bip_status <= 1;
+            config_atual.bip_time <= 5;
+            config_atual.tranca_aut_time <= 5;
+            config_atual.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
+            config_atual.senha_1 <= {20{4'hF}};
+            config_atual.senha_2 <= {20{4'hF}};
+            config_atual.senha_3 <= {20{4'hF}};
+            config_atual.senha_4 <= {20{4'hF}};
+			senha_temp <= {20{4'hF}};
+			contador_falhas <= 0;
+			contador_trancamento <= 0;
+			contador_falhas <= 0;
+			quant_falhas <= 0;
+      setup_on <= 0;
 		end
 		else begin
-			case (state)
-				IDLE : begin
-					if(no_disturb_mode)begin
-						state <= NO_PERTUBE;
+			case (estado)
+                RESET_STATE: begin
+                    if(!sensor_contato)begin
+                        estado <= IDLE;
+                    end
+                end
+				IDLE : begin //pronto
+					if(modo_n_pertube)begin
+						estado <= NO_PERTUBE;
 					end
-					else if(password_confirmed &&
+					else if(confirmou_senha &&
 						digitos_value.digits[0] != 4'hE &&
 						digitos_value.digits[0] != 4'hB)begin
-						state <= VERIFICAR_SENHA;
-						temp_password <= digitos_value;
+						estado <= VERIFICAR_SENHA;
+						senha_temp <= digitos_value;
 					end
-					else if(internal_edge) begin
-						state <= DESTRANCAR_PORTA;
-					end
-				end
-				NO_PERTUBE : begin
-					if(internal_edge)begin
-						state <= DESTRANCAR_PORTA;
+					else if(interno_borda) begin
+						estado <= DESTRANCAR_PORTA;
 					end
 				end
-				VERIFICAR_SENHA : begin
-					if (verificar_senha(temp_password, current_config.senha_1) |
-						verificar_senha(temp_password, current_config.senha_2) |
-						verificar_senha(temp_password, current_config.senha_3) |
-						verificar_senha(temp_password, current_config.senha_4)) begin
-							state <= DESTRANCAR_PORTA;
-							fail_count <= 0;
+				NO_PERTUBE : begin //pronto
+					if(interno_borda)begin
+						estado <= DESTRANCAR_PORTA;
+					end
+				end
+				VERIFICAR_SENHA : begin //pronto
+					if (verificar_senha(senha_temp, config_atual.senha_1) ||
+						verificar_senha(senha_temp, config_atual.senha_2) ||
+						verificar_senha(senha_temp, config_atual.senha_3) ||
+						verificar_senha(senha_temp, config_atual.senha_4) ||
+                        verificar_senha(senha_temp, config_atual.senha_master)) begin
+							estado <= DESTRANCAR_PORTA;
+							quant_falhas <= 0;
 					end
 					else begin
-						state <= TIMEOUT_SENHA_ERRADA;
-						fail_count <= fail_count + 1;
-						fail_counter <= 0;
+						estado <= TIMEOUT_SENHA_ERRADA;
+						quant_falhas <= quant_falhas + 1;
+						contador_falhas <= 0;
 					end
-					temp_password <= '1;
+					senha_temp <= '1;
 				end
-				TIMEOUT_SENHA_ERRADA : begin
-					fail_counter <= fail_counter + 1;
-					if(fail_count < 5  && fail_counter >= 1000) state <= IDLE;
-					else if(fail_counter >= 30000) state <= IDLE;
+				TIMEOUT_SENHA_ERRADA : begin //pronto
+					contador_falhas <= contador_falhas + 1;
+					if(quant_falhas < 5  && contador_falhas >= 1000) estado <= IDLE;
+					else if(contador_falhas >= 30000) estado <= IDLE;
 				end
-				DESTRANCAR_PORTA : begin
+				DESTRANCAR_PORTA : begin //pronto
 					if(sensor_contato)begin
-						state <= TEMPO_BIP;
+						estado <= TEMPO_BIP;
 					end
-					else state <= TEMPO_TRANCAMENTO;
-					lock_counter <= 0;
-					bip_counter <= 0;
+					else estado <= TEMPO_TRANCAMENTO;
+					contador_trancamento <= 0;
+					contador_bip <= 0;
 				end
-				TEMPO_BIP : begin
+				TEMPO_BIP : begin //pronto
 					if(botao_config)begin
-						state <= CONFIG;
+						estado <= CONFIG;
 					end
 					else if(!sensor_contato) begin
-						state <= TEMPO_TRANCAMENTO;
-						lock_counter <= 0;
+						estado <= TEMPO_TRANCAMENTO;
+						contador_trancamento <= 0;
 					end
 					else begin
-						bip_counter <= bip_counter + 1;
+						contador_bip <= contador_bip + 1;
 					end
 				end
-				TEMPO_TRANCAMENTO : begin
-					if(lock_counter >= (current_config.tranca_aut_time *1000) || internal_edge) begin
-						state <= TRANCAR_PORTA;
+				TEMPO_TRANCAMENTO : begin // PRONTO
+					if(contador_trancamento >= (config_atual.tranca_aut_time *1000) || interno_borda) begin
+						estado <= TRANCAR_PORTA;
 					end
 					else if(sensor_contato)begin
-						state <= TEMPO_BIP;
-						bip_counter <= 0;
+						estado <= TEMPO_BIP;
+						contador_bip <= 0;
 					end
-					lock_counter <= lock_counter + 1;
+					contador_trancamento <= contador_trancamento + 1;
 
 				end
-				TRANCAR_PORTA : begin
-					state <= IDLE;
+				TRANCAR_PORTA : begin //pronto
+					estado <= IDLE;
 				end
-				CONFIG : begin
-					if(password_confirmed && digitos_value.digits[0] != 4'hE)begin
+				CONFIG : begin //PRONTO
+					if(confirmou_senha && digitos_value.digits[0] != 4'hE)begin
 						if(digitos_value.digits[0] != 4'hB)begin
 
-							state <= VALIDA_SENHA_MASTER;
-							temp_password <= digitos_value;
+							estado <= VALIDA_SENHA_MASTER;
+							senha_temp <= digitos_value;
 						end
-						else state <= IDLE;
+						else estado <= IDLE;
 					end
 				end
-				VALIDA_SENHA_MASTER:begin
-					if(verificar_senha(temp_password, current_config.senha_master))begin
-						state <= ESPERAR_CONFIG;
+				VALIDA_SENHA_MASTER:begin //pronto
+					if(verificar_senha(senha_temp, config_atual.senha_master))begin
+						estado <= ESPERAR_CONFIG;
+                        setup_on <= 1;
 					end
-					else state <= CONFIG;
+					else estado <= CONFIG;
 				end
-				ESPERAR_CONFIG : begin
+				ESPERAR_CONFIG : begin // PRONTO
 					if(data_setup_ok)begin
-						state <= ATUALIZAR_CONFIG;
+						estado <= ATUALIZAR_CONFIG;
 					end
 				end
-				ATUALIZAR_CONFIG : begin
-					current_config <= data_setup_new;
-					state <= IDLE;
+				ATUALIZAR_CONFIG : begin //PRONTO
+					config_atual <= data_setup_new;
+                    setup_on <= 0;
+                    estado <= TEMPO_BIP;
 				end
 				default: begin
-					state <= IDLE;
-					current_config.bip_status <= 1;
-					current_config.bip_time <= 5;
-					current_config.tranca_aut_time <= 5;
-					current_config.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
-					current_config.senha_1 <= {20{4'hF}};
-					current_config.senha_2 <= {20{4'hF}};
-					current_config.senha_3 <= {20{4'hF}};
-					current_config.senha_4 <= {20{4'hF}};
-					temp_password <= {20{4'hF}};
-					fail_counter <= 0;
-					lock_counter <= 0;
-					fail_counter <= 0;
-					fail_count <= 0;
+					estado <= IDLE;
+					config_atual.bip_status <= 1;
+					config_atual.bip_time <= 5;
+					config_atual.tranca_aut_time <= 5;
+					config_atual.senha_master <= {{16{4'hF}},4'h1,4'h2,4'h3,4'h4 };
+					config_atual.senha_1 <= {20{4'hF}};
+					config_atual.senha_2 <= {20{4'hF}};
+					config_atual.senha_3 <= {20{4'hF}};
+					config_atual.senha_4 <= {20{4'hF}};
+					senha_temp <= {20{4'hF}};
+					contador_falhas <= 0;
+					contador_trancamento <= 0;
+					contador_falhas <= 0;
+					quant_falhas <= 0;
 				end
 			endcase
 		end
@@ -1082,13 +1087,13 @@ module operacional(
 	//always contador botão bloqueio
 	always_ff @(posedge clk or posedge rst) begin
 		if (rst) begin
-			no_disturb_counter <= 0;
+			contador_n_pertube <= 0;
 		end
-		else if( state != IDLE || !botao_bloqueio)begin
-			no_disturb_counter <= 0;
+		else if( estado != IDLE || !botao_bloqueio)begin
+			contador_n_pertube <= 0;
 		end
 		else begin
-			no_disturb_counter <= no_disturb_counter + 1;
+			contador_n_pertube <= contador_n_pertube + 1;
 		end
 	end
 
@@ -1099,15 +1104,15 @@ module operacional(
 			bcd_pac = {6{4'hB}};
 		end
 		else begin
-			case (state)
+			case (estado)
 				TIMEOUT_SENHA_ERRADA:begin
 					display_en <= 1;
-					bcd_pac.BCD0 = fail_count >= 1 ? 4'hA : 4'hB;
-					bcd_pac.BCD1 = fail_count >= 2 ? 4'hA : 4'hB;
-					bcd_pac.BCD2 = fail_count >= 3 ? 4'hA : 4'hB;
-					bcd_pac.BCD3 = fail_count >= 4 ? 4'hA : 4'hB;
-					bcd_pac.BCD4 = fail_count >= 5 ? 4'hA : 4'hB;
-					bcd_pac.BCD5 = fail_count >= 5 ? 4'hA : 4'hB;
+					bcd_pac.BCD0 = quant_falhas >= 1 ? 4'hA : 4'hB;
+					bcd_pac.BCD1 = quant_falhas >= 2 ? 4'hA : 4'hB;
+					bcd_pac.BCD2 = quant_falhas >= 3 ? 4'hA : 4'hB;
+					bcd_pac.BCD3 = quant_falhas >= 4 ? 4'hA : 4'hB;
+					bcd_pac.BCD4 = quant_falhas >= 5 ? 4'hA : 4'hB;
+					bcd_pac.BCD5 = quant_falhas >= 5 ? 4'hA : 4'hB;
 				end
 				VALIDA_SENHA_MASTER : begin
 					display_en <= 1;
@@ -1132,7 +1137,7 @@ module operacional(
 					bcd_pac = {6{4'hB}};
 				end
 				default: begin
-					display_en <= 1;
+					display_en = 1;
 					bcd_pac.BCD0 =4'hB;
 					bcd_pac.BCD1 =4'hB;
 					bcd_pac.BCD2 =4'hB;
@@ -1152,7 +1157,7 @@ module operacional(
 			bip = 0;
 		end
 		else begin
-			case (state)
+			case (estado)
 				DESTRANCAR_PORTA : begin
 					tranca = 0;
 					bip = 0;
@@ -1163,7 +1168,7 @@ module operacional(
 				end
 				TEMPO_BIP : begin
 					tranca = 0;
-					bip = bip_counter >= (current_config.bip_time * 1000) ? 1 : 0;
+					bip = (contador_bip >= (config_atual.bip_time * 1000) && config_atual.bip_status) ? 1 : 0;
 				end
 				IDLE: begin
 					tranca = 1;
@@ -1184,15 +1189,15 @@ endmodule
 //========================================= INICIO DO DISPLAY =========================
 
 module display (
-    input 		logic 		clk,
-    input 		logic 		rst,
-    input 		logic 		enable_o, enable_s,
-    input 		bcdPac_t 	bcd_packet_operacional, bcd_packet_setup,
-    output 		logic [6:0] 	HEX0, HEX1,HEX2, HEX3, HEX4, HEX5
+input 		logic 		clk,
+input 		logic 		rst,
+input 		logic 		enable_o, enable_s,
+input 		bcdPac_t 	bcd_packet_operacional, bcd_packet_setup,
+output 		logic [6:0] 	HEX0, HEX1,HEX2, HEX3, HEX4, HEX5
 );
 
-    function automatic logic [6:0] decode_7seg(input logic [3:0] hex_value);
-        case (hex_value)
+    function automatic logic [6:0] decodifica_7seg(input logic [3:0] valor_hex);
+        case (valor_hex)
             4'h0 : return 7'b1000000; // 0
             4'h1 : return 7'b1111001; // 1
             4'h2 : return 7'b0100100; // 2
@@ -1209,21 +1214,21 @@ module display (
         endcase
     endfunction
 
-    logic [5:0] [6:0] translation_setup, translation_op;
+    logic [5:0] [6:0] traducao_setup, traducao_op;
 
-    assign translation_setup[0] = decode_7seg(bcd_packet_setup.BCD0);
-    assign translation_setup[1] = decode_7seg(bcd_packet_setup.BCD1);
-    assign translation_setup[2] = decode_7seg(bcd_packet_setup.BCD2);
-    assign translation_setup[3] = decode_7seg(bcd_packet_setup.BCD3);
-    assign translation_setup[4] = decode_7seg(bcd_packet_setup.BCD4);
-    assign translation_setup[5] = decode_7seg(bcd_packet_setup.BCD5);
+    assign traducao_setup[0] = decodifica_7seg(bcd_packet_setup.BCD0);
+    assign traducao_setup[1] = decodifica_7seg(bcd_packet_setup.BCD1);
+    assign traducao_setup[2] = decodifica_7seg(bcd_packet_setup.BCD2);
+    assign traducao_setup[3] = decodifica_7seg(bcd_packet_setup.BCD3);
+    assign traducao_setup[4] = decodifica_7seg(bcd_packet_setup.BCD4);
+    assign traducao_setup[5] = decodifica_7seg(bcd_packet_setup.BCD5);
 
-    assign translation_op[0] = decode_7seg(bcd_packet_operacional.BCD0);
-    assign translation_op[1] = decode_7seg(bcd_packet_operacional.BCD1);
-    assign translation_op[2] = decode_7seg(bcd_packet_operacional.BCD2);
-    assign translation_op[3] = decode_7seg(bcd_packet_operacional.BCD3);
-    assign translation_op[4] = decode_7seg(bcd_packet_operacional.BCD4);
-    assign translation_op[5] = decode_7seg(bcd_packet_operacional.BCD5);
+    assign traducao_op[0] = decodifica_7seg(bcd_packet_operacional.BCD0);
+    assign traducao_op[1] = decodifica_7seg(bcd_packet_operacional.BCD1);
+    assign traducao_op[2] = decodifica_7seg(bcd_packet_operacional.BCD2);
+    assign traducao_op[3] = decodifica_7seg(bcd_packet_operacional.BCD3);
+    assign traducao_op[4] = decodifica_7seg(bcd_packet_operacional.BCD4);
+    assign traducao_op[5] = decodifica_7seg(bcd_packet_operacional.BCD5);
 
   always_ff @( posedge clk or posedge rst ) begin
     if(rst)begin
@@ -1236,20 +1241,20 @@ module display (
     end
     else begin
         if(enable_o)begin
-            HEX0 <= translation_op[0];
-            HEX1 <= translation_op[1];
-            HEX2 <= translation_op[2];
-            HEX3 <= translation_op[3];
-            HEX4 <= translation_op[4];
-            HEX5 <= translation_op[5];
+            HEX0 <= traducao_op[0];
+            HEX1 <= traducao_op[1];
+            HEX2 <= traducao_op[2];
+            HEX3 <= traducao_op[3];
+            HEX4 <= traducao_op[4];
+            HEX5 <= traducao_op[5];
         end
         else if(enable_s)begin
-            HEX0 <= translation_setup[0];
-            HEX1 <= translation_setup[1];
-            HEX2 <= translation_setup[2];
-            HEX3 <= translation_setup[3];
-            HEX4 <= translation_setup[4];
-            HEX5 <= translation_setup[5];
+            HEX0 <= traducao_setup[0];
+            HEX1 <= traducao_setup[1];
+            HEX2 <= traducao_setup[2];
+            HEX3 <= traducao_setup[3];
+            HEX4 <= traducao_setup[4];
+            HEX5 <= traducao_setup[5];
         end
         else begin
             HEX0 <= 7'b1111111;
@@ -1266,59 +1271,71 @@ endmodule
 
 // ====================================== FIM DO DISPLAY ===========================
 
-
-// ===================================== INICIO DO RESET ===========================
-
+// ====================================== INICIO DO RESETHOLD ===========================
 
 module resetHold5s #(parameter TIME_TO_RST = 5)
 	(input logic clk, reset_in,
 output logic reset_out);
 
 
-  int counter;
+  int contador;
 
   always_ff @(posedge clk)begin
     if(!reset_in)begin
-      counter <= 0;
+      contador <= 0;
       reset_out <= 0;
     end
-    else if(counter >= 5000)begin
+    else if(contador >= 5000)begin
       reset_out <= 1;
     end
     else begin
-      counter <= counter + 1;
+      contador <= contador + 1;
       reset_out <= 0;
     end
   end
 
 endmodule
 
+// ====================================== FIM DO RESETHOLD ===========================
 
-// ===================================== FIM DO RESET ============================
+module divfreq(input reset, clock, output logic clk_i);
+  int cont;
+  always @(posedge clock or posedge reset) begin
+    if(reset) begin
+      cont  = 0;
+      clk_i = 0;
+    end
+    else
+      if( cont <= 25000 )
+        cont++;
+      else begin
+        clk_i = ~clk_i;
+        cont = 0;
+      end
+  end
+endmodule
 
-//=================================== INICIO FECHADURA TOP =======================
-
+//===================================== INICIO FECHADURA TOP =======================
 
 module FechaduraTop (
-  	input 	logic clk, rst, sensor_de_contato, botao_interno, botao_bloqueio, botao_config,
-  	input	logic [3:0] matricial_col,
-  	output	logic [3:0] matricial_lin,
-  	output 	logic [6:0] dispHex0, dispHex1, dispHex2, dispHex3, dispHex4, dispHex5,
-	output logic tranca, bip
-);
+input 	logic clk, rst, sensor_de_contato, botao_interno, botao_bloqueio, botao_config,
+input	logic [3:0] matricial_col,
+output	logic [3:0] matricial_lin,
+output 	logic [6:0] dispHex0, dispHex1, dispHex2, dispHex3, dispHex4, dispHex5,
+output logic tranca, bip );
 
 
     logic enable_teclado;
     logic teclado_digit_valid;
     senhaPac_t teclado_senha_value;
 
-    logic reset_out;
+  logic reset_out;
 
-    resetHold5s(
-      .clk(clk),
-      .reset_in(rst),
-      .reset_out(reset_out)
-    )
+  resetHold5s rst_module(
+    .clk(clk),
+    .reset_in(rst),
+    .reset_out(reset_out)
+  );
 
     decodificador_de_teclado teclado (
         .clk(clk),
@@ -1384,4 +1401,4 @@ module FechaduraTop (
 
 endmodule
 
-//=============================== FIM FECHADURA TOP ========================================
+//=====================================FIM FECHADURA TOP====================================
